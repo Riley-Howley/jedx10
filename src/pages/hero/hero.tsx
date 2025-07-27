@@ -1,29 +1,17 @@
 import Button from "../../components/button/button";
 import { specialTitle, title, subtitle, primaryButton, SecondaryButton } from "./hero.strings";
-
-import Logo from "../../assets/logo.svg"
+import Logo from "../../assets/logo.svg";
+import styles from "./hero.module.css";
 
 const Hero = () => {
     return (
-        <section
-            style={{
-                height: "100vh",
-                width: "100%"
-            }}
-        >
-            <img src={Logo} width={300} />
-            <h1 style={{
-                color: "white",
-                fontSize: "3rem",
-                fontWeight: "bold",
-                marginBottom: "24px",
-            }}>{title} <span style={{
-                color: "#CBB26A",
-            }}>{specialTitle}</span></h1>
-            <p style={{
-                color: "white",
-            }}>{subtitle}</p>
-            <div>
+        <section className={styles.hero}>
+            <img src={Logo} alt="JEDXIO Logo" className={styles.logo} />
+            <h1 className={styles.title}>
+                {title} <span className={styles.highlight}>{specialTitle}</span>
+            </h1>
+            <p className={styles.subtitle}>{subtitle}</p>
+            <div className={styles.buttons}>
                 <Button primary text={primaryButton} />
                 <Button primary={false} text={SecondaryButton} />
             </div>

@@ -1,29 +1,24 @@
 import Container from "../../components/container/container";
 import { specialTitle, title, purposes } from "./purpose.strings";
+import styles from "./purpose.module.css";
 
 const Purpose = () => {
     return (
-        <section style={{
-            height: "100vh",
-            width: "100%",
-        }}>
-            <h1 style={{
-                color: "white",
-                fontSize: "2rem",
-                fontWeight: "bold",
-                marginBottom: "24px",
-            }}>{title} <span style={{
-                color: "#CBB26A",
-            }}>{specialTitle}</span></h1>
-            <div
-                style={{
-                    display: "flex",
-                    justifyContent: "space-around",
-                }}
-            >
-                {purposes.map((p) => 
-                    <Container logo={p.icon} title={p.title} description={p.description} />
-                )}
+        <section className={styles.purpose}>
+            <div className={styles.content}>
+                <h2 className={styles.title}>
+                    {title} <span className={styles.highlight}>{specialTitle}</span>
+                </h2>
+                <div className={styles.grid}>
+                    {purposes.map((p, idx) => (
+                        <Container
+                            key={idx}
+                            logo={p.icon}
+                            title={p.title}
+                            description={p.description}
+                        />
+                    ))}
+                </div>
             </div>
         </section>
     );

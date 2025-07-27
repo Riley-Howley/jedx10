@@ -1,0 +1,181 @@
+.journey {
+    
+    background-image: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 40px 40px;
+    color: white;
+    padding: 6rem 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+  }
+  
+  .content {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+  
+  .title {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 700;
+    margin-bottom: 4rem;
+    text-align: center;
+    line-height: 1.2;
+    letter-spacing: -0.02em;
+  }
+  
+  .highlight {
+    color: #CBB26A;
+    background: linear-gradient(135deg, #CBB26A 0%, #E6D17A 50%, #CBB26A 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  
+  .layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+  
+  .imageSection {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .imagePlaceholder {
+    background-color: #1a1a1a;
+    color: #666;
+    border: 2px dashed #333;
+    border-radius: 12px;
+    padding: 6rem 2rem;
+    font-style: italic;
+    font-size: 1.1rem;
+    width: 100%;
+    max-width: 500px;
+    aspect-ratio: 4/3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .timelineSection {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .card {
+    border: 1px solid rgba(203, 178, 106, 0.2);
+    border-left: 4px solid #CBB26A;
+    border-radius: 12px;
+    padding: 2rem;
+    text-align: left;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+  }
+  
+  .card:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(203, 178, 106, 0.4);
+    transform: translateX(8px);
+  }
+  
+  .cardTitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: white;
+  }
+  
+  .cardDescription {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.5;
+    margin: 0;
+  }
+  
+  .buttonContainer {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 1rem;
+  }
+  
+  /* Mobile optimizations */
+  @media (max-width: 1024px) {
+    .layout {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+      text-align: center;
+    }
+  
+    .timelineSection {
+      align-items: center;
+    }
+  
+    .buttonContainer {
+      justify-content: center;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .journey {
+      padding: 4rem 0;
+    }
+  
+    .content {
+      padding: 0 1.5rem;
+    }
+  
+    .title {
+      margin-bottom: 3rem;
+    }
+  
+    .layout {
+      gap: 2.5rem;
+    }
+  
+    .imagePlaceholder {
+      padding: 4rem 1.5rem;
+      font-size: 1rem;
+    }
+  
+    .card {
+      padding: 1.5rem;
+    }
+  
+    .timeline {
+      gap: 1.25rem;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .content {
+      padding: 0 1rem;
+    }
+  
+    .imagePlaceholder {
+      padding: 3rem 1rem;
+    }
+  
+    .card {
+      padding: 1.25rem;
+    }
+  
+    .cardTitle {
+      font-size: 1.1rem;
+    }
+  
+    .cardDescription {
+      font-size: 0.95rem;
+    }
+  }

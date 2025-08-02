@@ -1,0 +1,88 @@
+/* login.module.css */
+
+.loginContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 120px); /* Adjust based on your footer height */
+    padding: 2rem 1rem;
+  }
+  
+  .col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 3rem 2rem;
+    border: 1px solid white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .brandImage {
+    width: 220px;
+    height: auto;
+  }
+  
+  .col h1 {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 2rem;
+    text-align: center;
+  }
+  
+  .col form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .col input {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.2s ease-in-out;
+  }
+  
+  .col input:focus {
+    outline: none;
+    border-color: #CBB26A;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
+  
+  .col input:last-child {
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 640px) {
+    .loginContainer {
+      padding: 1rem;
+      min-height: calc(100vh - 100px);
+    }
+    
+    .col {
+      padding: 2rem 1.5rem;
+    }
+    
+    .brandImage {
+      width: 100px;
+      margin-bottom: 1.5rem;
+    }
+    
+    .col h1 {
+      font-size: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+  }

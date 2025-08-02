@@ -2,9 +2,14 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { supabase } from "../../lib/superbase"
+import Footer from "../footer/footer"
+import brandImage from "../../assets/logo.svg";
+import styles from './register.module.css'
+import Button from "../../components/button/button";
 
 export default function Register() {
   const navigate = useNavigate()
+  const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [loading, setLoading] = useState(false)
@@ -28,30 +33,38 @@ export default function Register() {
   }
 
   return (
-    <div style={{color: "white"}} className="max-w-md mx-auto mt-20 p-4 border rounded shadow">
-      <h2 className="text-2xl font-semibold mb-4">Register</h2>
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="block w-full mb-2 p-2 border rounded"
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        className="block w-full mb-4 p-2 border rounded"
-      />
-      <button
-        onClick={handleRegister}
-        disabled={loading}
-        className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-      >
-        {loading ? "Registering..." : "Register"}
-      </button>
-      {error && <p className="text-red-500 mt-2">{error}</p>}
-    </div>
+    <>
+      <div className={styles.registerContainer}>
+        <div className={styles.col}>
+          <img src={brandImage} className={styles.brandImage} />
+          <h1>Create Your Account</h1>
+          <form>
+            <input 
+              type="text"
+              placeholder="Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+              <input
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <Button text="Register" primary onClick={() => {
+                console.log("Register")
+                // handleRegister()
+              }} />
+          </form>
+        </div>
+      </div>
+      <Footer />
+    </>
   )
 }

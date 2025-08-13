@@ -1,5 +1,5 @@
 import { useState, type JSX } from 'react';
-import styles from './AdminDashboard.module.css';
+import styles from './adminDashboard.module.css';
 
 type TabType = 'dashboard' | 'users' | 'content' | 'feedback' | 'workouts';
 

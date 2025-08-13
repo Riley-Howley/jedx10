@@ -10,12 +10,12 @@ import styles from './login.module.css'
 export default function Login() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [error, setError] = useState("")
+  const [ ,setError] = useState("")
 
   const handleLogin = async () => {
     const { error } = await supabase.auth.signInWithPassword({ email, password })
     if (error) setError(error.message)
-    else window.location.href = "/dashboard"
+    else window.location.href = "/dashboard/home"
     console.log("Error Message", error)
   }
 
@@ -38,7 +38,7 @@ export default function Login() {
               value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <Button text="login" primary onClick={() => {
+              <Button text="login" primary onButtonClick={() => {
                 console.log("Login");
                 handleLogin();  
               }} />

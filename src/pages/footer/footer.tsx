@@ -55,7 +55,7 @@ const Footer = () => {
                     <p className={styles.ctaText}>
                         Book your call with Jedi and start your journey to real, lasting results with JEDX10!
                     </p>
-                    <Button primary text="BOOK YOUR CALL TODAY" />
+                    <Button onButtonClick={() => {}} primary text="BOOK YOUR CALL TODAY" />
                 </div>
             </div>
         </footer>

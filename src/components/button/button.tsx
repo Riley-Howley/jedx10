@@ -3,15 +3,15 @@ import type { MouseEventHandler } from 'react';
 interface ButtonProps {
     primary: boolean;
     text: string;
-    onClick: MouseEventHandler<HTMLButtonElement>;
+    onButtonClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
-const Button = ({primary, text, onClick}: ButtonProps) => {
+const Button = ({primary, text, onButtonClick}: ButtonProps) => {
     return (
         primary ? (
             <button 
                 type="button"
-                onClick={onClick}
+                onClick={onButtonClick}
                 style={{
                     backgroundColor: "#CBB26A",
                     padding: "16px 32px",
@@ -22,7 +22,7 @@ const Button = ({primary, text, onClick}: ButtonProps) => {
         ) : (
             <button 
                 type="button"
-                onClick={onClick}
+                onClick={onButtonClick}
                 style={{
                     border: "2px solid white",
                     borderRadius: "10px",

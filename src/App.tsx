@@ -1,45 +1,49 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
-import Home from './pages/home'
-import Login from './pages/login/login'
-import { useEffect, useState, type JSX } from 'react';
-import { supabase } from './lib/superbase';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+
+
+import Home from './pages/home';
+import Login from './pages/login/login';
 import Register from './pages/register/register';
+import Dashboard from './pages/dashboard/dashboard';
+import AdminDashboard from './pages/dashboard/admin/adminDashboard';
+import UserDashboard from './pages/dashboard/user/userDashboard';
+import { useCurrentUser } from './context/UserContext';
+import type { JSX } from 'react';
 
 function PrivateRoute({ element }: { element: JSX.Element }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const { user, loading } = useCurrentUser(); 
 
-  useEffect(() => {
-    const checkAuth = async () => {
-      const { data } = await supabase.auth.getSession();
-      setIsAuthenticated(!!data.session);
-      setLoading(false);
-    };
-    checkAuth();
-  }, []);
-
-  if (loading) return <div>Loading...</div>; // Optional: Add a loading state
-  return isAuthenticated ? element : <Navigate to="/login" />;
+  if (loading) return <div>Loading...</div>;
+  return user ? element : <Navigate to="/login" />;
 }
 
-function App() {
+export default function App() {
+  const { user } = useCurrentUser();
+
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
-        <Route 
-          path="/dashboard" 
-          element={
-            <PrivateRoute element={<></>} />
-          } 
-        />
-        {/* Catch all route - redirect to home */}
+
+        <Route
+          path="/dashboard"
+          element={<PrivateRoute element={<Dashboard />} />}
+        >
+          <Route
+            path="home"
+            element={
+              user?.user_metadata?.role === 'admin'
+                ? <AdminDashboard />
+                : <UserDashboard />
+            }
+          />
+          <Route path="program/:programId" element={<h1>Program page</h1>} />
+        </Route>
+
         <Route path="*" element={<Home />} />
       </Routes>
     </Router>
-  )
+  );
 }
-
-export default App

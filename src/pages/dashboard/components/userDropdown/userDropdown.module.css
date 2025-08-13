@@ -1,0 +1,124 @@
+.userDropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  .userButton {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    font-size: 0.875rem;
+  }
+  
+  .userButton:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+  
+  .avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #CBB26A;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: white;
+  }
+  
+  .userEmail {
+    font-weight: 500;
+    max-width: 150px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  
+  .chevron {
+    transition: transform 0.2s ease-in-out;
+    flex-shrink: 0;
+  }
+  
+  .chevronOpen {
+    transform: rotate(180deg);
+  }
+  
+  .dropdown {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    right: 0;
+    background: white;
+    border: 1px solid #e5e5e5;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    min-width: 200px;
+    z-index: 1000;
+    overflow: hidden;
+  }
+  
+  .dropdownItem {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.15s ease-in-out;
+    font-size: 0.875rem;
+    color: #374151;
+  }
+  
+  .dropdownItem:hover {
+    background: #f9fafb;
+  }
+  
+  .dropdownItem svg {
+    flex-shrink: 0;
+    color: #6b7280;
+  }
+  
+  .logoutItem {
+    color: #dc2626;
+  }
+  
+  .logoutItem:hover {
+    background: #fef2f2;
+  }
+  
+  .logoutItem svg {
+    color: #dc2626;
+  }
+  
+  .divider {
+    height: 1px;
+    background: #e5e5e5;
+    margin: 0.25rem 0;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 640px) {
+    .userEmail {
+      display: none;
+    }
+    
+    .userButton {
+      padding: 0.5rem;
+    }
+    
+    .dropdown {
+      right: 0;
+      min-width: 160px;
+    }
+  }

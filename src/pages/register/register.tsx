@@ -12,15 +12,18 @@ export default function Register() {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
+  const [, setLoading] = useState(false)
+  const [, setError] = useState("")
 
   const handleRegister = async () => {
     setLoading(true)
     setError("")
     const { error } = await supabase.auth.signUp({
       email,
-      password
+      password,
+      options: {
+        data: { role: "user" } // or "user", "editor", etc.
+      }
     })
     setLoading(false)
 
@@ -28,7 +31,7 @@ export default function Register() {
       setError(error.message)
     } else {
       alert("Check your email for a confirmation link (unless email confirmations are off)")
-      navigate("/dashboard")
+      navigate("/dashboard/home")
     }
   }
 
@@ -57,9 +60,9 @@ export default function Register() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <Button text="Register" primary onClick={() => {
+              <Button text="Register" primary onButtonClick={() => {
                 console.log("Register")
-                // handleRegister()
+                handleRegister()
               }} />
           </form>
         </div>

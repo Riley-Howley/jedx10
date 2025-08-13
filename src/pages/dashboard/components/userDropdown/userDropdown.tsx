@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import type { MouseEventHandler } from 'react';
-import styles from './UserDropdown.module.css';
+import styles from './userDropdown.module.css';
 import { supabase } from '../../../../lib/superbase';
 import { useCurrentUser } from '../../../../context/UserContext';
 

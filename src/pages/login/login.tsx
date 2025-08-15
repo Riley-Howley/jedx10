@@ -5,15 +5,19 @@ import brandImage from "../../assets/logo.svg";
 import Button from "../../components/button/button";
 import Footer from "../footer/footer";
 import styles from './login.module.css'
+import Loading from "../../components/loading/loading";
 
 
 export default function Login() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [ ,setError] = useState("")
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState("")
 
   const handleLogin = async () => {
+    setLoading(true)
     const { error } = await supabase.auth.signInWithPassword({ email, password })
+    setLoading(false)
     if (error) setError(error.message)
     else window.location.href = "/dashboard/home"
     console.log("Error Message", error)
@@ -22,10 +26,14 @@ export default function Login() {
   return (
     <>
       <div className={styles.loginContainer}>
-        <div className={styles.col}>
-          <img src={brandImage} className={styles.brandImage} />
-          <h1>Welcome Back</h1>
-          <form>
+        {loading ? (
+          <Loading />
+        ) : (
+          <div className={styles.col}>
+            <img src={brandImage} className={styles.brandImage} />
+            <h1>Welcome Back</h1>
+            <form>
+              {error && <p style={{color: 'red'}}>{error}</p>}
               <input
                 type="email"
                 placeholder="Email"
@@ -35,15 +43,17 @@ export default function Login() {
               <input
                 type="password"
                 placeholder="Password"
-              value={password}
+                value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
               <Button text="login" primary onButtonClick={() => {
                 console.log("Login");
-                handleLogin();  
+                handleLogin();
               }} />
-          </form>
-        </div>
+            </form>
+          </div>
+        )}
+
       </div>
       <Footer />
     </>

@@ -12,7 +12,7 @@ export default function Register() {
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
-  const [, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [, setError] = useState("")
 
   const handleRegister = async () => {
@@ -38,16 +38,19 @@ export default function Register() {
   return (
     <>
       <div className={styles.registerContainer}>
-        <div className={styles.col}>
-          <img src={brandImage} className={styles.brandImage} />
-          <h1>Create Your Account</h1>
-          <form>
-            <input 
-              type="text"
-              placeholder="Name"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-            />
+        {loading ? (
+          <h1 style={{color: 'white'}}>Registering your account ....</h1>
+        ) : (
+          <div className={styles.col}>
+            <img src={brandImage} className={styles.brandImage} />
+            <h1>Create Your Account</h1>
+            <form>
+              <input
+                type="text"
+                placeholder="Name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
               <input
                 type="email"
                 placeholder="Email"
@@ -64,8 +67,9 @@ export default function Register() {
                 console.log("Register")
                 handleRegister()
               }} />
-          </form>
-        </div>
+            </form>
+          </div>
+        )}
       </div>
       <Footer />
     </>

@@ -1,7 +1,7 @@
 // CourseManagement.tsx
 import React, { useState, useEffect } from 'react';
 import { Loader2, Save, Plus, Trash2 } from 'lucide-react';
-import styles from './CourseManagement.module.css';
+import styles from './courseCreator.module.css';
 import {
   saveProgram,
   loadProgram,

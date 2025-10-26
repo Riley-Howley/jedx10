@@ -234,7 +234,7 @@ const UserDashboard = () => {
   };
 
   return (
-    <div className={styles.dashboard}>
+    <div style={{backgroundColor: '#1A1F2E'}} className={styles.dashboard}>
       <div className={styles.leftSection}>
         <h1 className={styles.sectionTitle}>Your Program</h1>
         

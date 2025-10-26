@@ -1,6 +1,6 @@
 .footer {
-    
     background-image: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-color: black;
     background-size: 40px 40px;
     color: white;
     padding: 2rem 0;

@@ -12,10 +12,13 @@
   "dependencies": {
     "@lottiefiles/react-lottie-player": "^3.6.0",
     "@supabase/supabase-js": "^2.49.10",
+    "@types/uuid": "^10.0.0",
+    "lucide-react": "^0.539.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-lottie": "^1.2.10",
-    "react-router-dom": "^7.7.1"
+    "react-router-dom": "^7.7.1",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.30.1",

@@ -9,7 +9,9 @@ import Testimonials from "./testimonials/testimonal"
 
 const Home = () => {
   return (
-    <>
+    <div style={{
+      backgroundColor: "black",
+    }}>
       <Hero />
       <Purpose /> 
       <Journey />
@@ -17,7 +19,7 @@ const Home = () => {
       <Testimonials />
       <CallToAction />
       <Footer />
-    </>
+    </div>
   )
 }
 

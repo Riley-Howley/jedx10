@@ -401,12 +401,13 @@ export async function getUserEnrolledPrograms(userId: string): Promise<any[]> {
         )
       `)
       .eq('user_id', userId)
-      .eq('is_active', true);
 
     if (error) {
       console.error('Error loading user programs:', error);
       return [];
     }
+
+    console.log("Data", data)
 
     return data || [];
   } catch (error) {
@@ -478,5 +479,38 @@ export async function updateVideoProgress(
   } catch (error) {
     console.error('Error in updateVideoProgress:', error);
     return false;
+  }
+}
+
+export async function getAvailablePrograms(userId: string): Promise<any[]> {
+  try {
+    // First, get the program IDs the user is enrolled in
+    const { data: enrolledPrograms, error: enrolledError } = await supabaseAdmin
+      .from('program_enrollments')
+      .select('program_id')
+      .eq('user_id', userId);
+
+    if (enrolledError) {
+      console.error('Error loading enrolled programs:', enrolledError);
+      return [];
+    }
+
+    const enrolledProgramIds = enrolledPrograms?.map(e => e.program_id) || [];
+
+    // Then get all programs NOT in that list
+    const { data, error } = await supabaseAdmin
+      .from('programs')
+      .select('*')
+      .not('id', 'in', `(${enrolledProgramIds.join(',')})`)
+
+    if (error) {
+      console.error('Error loading available programs:', error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error('Error in getAvailablePrograms:', error);
+    return [];
   }
 }

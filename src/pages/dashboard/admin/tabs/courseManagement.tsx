@@ -1,7 +1,6 @@
 // CourseManagement.tsx
 import React, { useState, useEffect } from 'react';
 import { Loader2, Save, Plus, Trash2 } from 'lucide-react';
-import styles from './courseCreator.module.css';
 import {
   saveProgram,
   loadProgram,
@@ -13,6 +12,8 @@ import {
   deleteVideo
 } from '../supabaseHelpers';
 import { v4 as uuidv4 } from 'uuid';
+
+import styles from './courseManagementNew.module.css';
 
 const generateId = () => uuidv4();
 

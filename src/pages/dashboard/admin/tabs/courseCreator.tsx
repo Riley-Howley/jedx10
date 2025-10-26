@@ -46,7 +46,7 @@ const CourseCreator: React.FC = () => {
       if (loadedProgram) {
         setProgram(loadedProgram);
         // Expand all courses for editing
-        const courseIds = new Set(loadedProgram.courses.map(c => c.id));
+        const courseIds = new Set(loadedProgram.courses!.map(c => c.id));
         setExpandedCourses(courseIds);
       }
     } catch (error) {
@@ -68,7 +68,7 @@ const CourseCreator: React.FC = () => {
     };
     setProgram(prev => ({
       ...prev,
-      courses: [...prev.courses, newCourse]
+      courses: [...prev.courses!, newCourse]
     }));
     setExpandedCourses(prev => new Set([...prev, newCourse.id]));
   };
@@ -76,7 +76,7 @@ const CourseCreator: React.FC = () => {
   const updateCourse = (courseId: string, field: keyof Course, value: any) => {
     setProgram(prev => ({
       ...prev,
-      courses: prev.courses.map(course =>
+      courses: prev.courses!.map(course =>
         course.id === courseId ? { ...course, [field]: value } : course
       )
     }));
@@ -85,7 +85,7 @@ const CourseCreator: React.FC = () => {
   const deleteCourse = (courseId: string) => {
     setProgram(prev => ({
       ...prev,
-      courses: prev.courses.filter(course => course.id !== courseId)
+      courses: prev.courses!.filter(course => course.id !== courseId)
     }));
     setExpandedCourses(prev => {
       const newSet = new Set(prev);
@@ -105,13 +105,13 @@ const CourseCreator: React.FC = () => {
     };
 
     updateCourse(courseId, 'videos', [
-      ...program.courses.find(c => c.id === courseId)?.videos || [],
+      ...program.courses!.find(c => c.id === courseId)?.videos || [],
       newVideo
     ]);
   };
 
   const updateVideo = (courseId: string, videoId: string, field: keyof ExerciseVideo, value: any) => {
-    const course = program.courses.find(c => c.id === courseId);
+    const course = program.courses!.find(c => c.id === courseId);
     if (!course) return;
 
     const updatedVideos = course.videos.map(video =>
@@ -122,7 +122,7 @@ const CourseCreator: React.FC = () => {
   };
 
   const deleteVideo = (courseId: string, videoId: string) => {
-    const course = program.courses.find(c => c.id === courseId);
+    const course = program.courses!.find(c => c.id === courseId);
     if (!course) return;
 
     const updatedVideos = course.videos.filter(video => video.id !== videoId);
@@ -130,14 +130,14 @@ const CourseCreator: React.FC = () => {
   };
 
   const addOption = (courseId: string) => {
-    const course = program.courses.find(c => c.id === courseId);
+    const course = program.courses!.find(c => c.id === courseId);
     if (!course) return;
 
     updateCourse(courseId, 'options', [...course.options, '']);
   };
 
   const updateOption = (courseId: string, index: number, value: string) => {
-    const course = program.courses.find(c => c.id === courseId);
+    const course = program.courses!.find(c => c.id === courseId);
     if (!course) return;
 
     const updatedOptions = [...course.options];
@@ -146,7 +146,7 @@ const CourseCreator: React.FC = () => {
   };
 
   const deleteOption = (courseId: string, index: number) => {
-    const course = program.courses.find(c => c.id === courseId);
+    const course = program.courses!.find(c => c.id === courseId);
     if (!course) return;
 
     const updatedOptions = course.options.filter((_, i) => i !== index);
@@ -165,9 +165,10 @@ const CourseCreator: React.FC = () => {
     });
   };
 
-  const handleVideoUpload = (courseId: string, videoId: string, file: File) => {
-    updateVideo(courseId, videoId, 'videoUrl', URL.createObjectURL(file));
-  };
+  // TODO: Figure out whether this is needed at all or else remove it
+  // const handleVideoUpload = (courseId: string, videoId: string, file: File) => {
+  //   updateVideo(courseId, videoId, 'videoUrl', URL.createObjectURL(file));
+  // };
 
   const handleSaveProgram = async () => {
     if (!program.title.trim()) {
@@ -227,7 +228,7 @@ const CourseCreator: React.FC = () => {
             </button>
           </div>
 
-          {program.courses.map((course, index) => (
+          {program.courses!.map((course, index) => (
             <div key={course.id} className={styles.coursePreview}>
               <h2 className={styles.coursePreviewTitle}>{course.title || `Course ${index + 1}`}</h2>
               <p className={styles.coursePreviewDescription}>{course.description}</p>
@@ -270,7 +271,7 @@ const CourseCreator: React.FC = () => {
                     <p className={styles.videoPreviewDescription}>{video.description}</p>
                     <div className={styles.videoPreviewMeta}>
                       <span>Duration: {video.duration || 'Not set'}</span>
-                      {video.videoFile && <span>Video uploaded</span>}
+                      {video.videoUrl && <span>Video uploaded</span>}
                     </div>
                   </div>
                 ))}
@@ -364,7 +365,7 @@ const CourseCreator: React.FC = () => {
         </div>
 
         <div className={styles.coursesSection}>
-          {program.courses.map((course, courseIndex) => (
+          {program.courses!.map((course, courseIndex) => (
             <div key={course.id} className={styles.courseCard}>
               <div
                 className={styles.courseCardHeader}
@@ -511,7 +512,7 @@ const CourseCreator: React.FC = () => {
                                 id={`video-${video.id}`}
                                 value={video.videoUrl}
                               />
-                              {video.videoFile && (
+                              {video.videoUrl && (
                                 <span className={styles.uploadStatus}>✓ Uploaded</span>
                               )}
                             </div>

@@ -1,6 +1,5 @@
 import { useState, type JSX } from 'react';
 import styles from './adminDashboard.module.css';
-import CourseCreator from './tabs/courseCreator';
 import CourseManagement from './tabs/courseManagement';
 
 type TabType = 'dashboard' | 'users' | 'content' | 'feedback' | 'workouts';

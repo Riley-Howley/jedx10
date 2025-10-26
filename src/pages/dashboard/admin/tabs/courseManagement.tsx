@@ -1,6 +1,6 @@
 // CourseManagement.tsx
 import React, { useState, useEffect } from 'react';
-import { Loader2, Eye, Save, Plus, Trash2 } from 'lucide-react';
+import { Loader2, Save, Plus, Trash2 } from 'lucide-react';
 import styles from './CourseManagement.module.css';
 import {
   saveProgram,
@@ -9,7 +9,8 @@ import {
   type Program,
   type ExerciseVideo,
   type Course,
-  deleteProgram
+  deleteProgram,
+  deleteVideo
 } from '../supabaseHelpers';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -23,7 +24,6 @@ const CourseManagement: React.FC = () => {
   const [typeFilter, setTypeFilter] = useState('');
   const [difficultyFilter, setDifficultyFilter] = useState('');
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [expandedCourses, setExpandedCourses] = useState<Set<string>>(new Set());
 
   const [isLoading, setIsLoading] = useState(false);
   const [existingPrograms, setExistingPrograms] = useState<Program[]>([]);
@@ -37,6 +37,7 @@ const CourseManagement: React.FC = () => {
     setIsLoading(true);
     try {
       const programs = await getAllPrograms();
+      console.log("Programs", programs);
       setExistingPrograms(programs);
     } catch (error) {
       console.error('Error loading programs:', error);
@@ -98,7 +99,7 @@ const CourseManagement: React.FC = () => {
       const program = await loadProgram(programId);
       setSelectedProgram(program);
       // default selectedCourse to first course if available
-      setSelectedCourse(program.courses && program.courses.length > 0 ? program.courses[0] : null);
+      setSelectedCourse(program!.courses && program!.courses.length > 0 ? program!.courses[0] : null);
       setIsEditing(true);
     } catch (err) {
       console.error('Error loading program for edit:', err);
@@ -125,7 +126,7 @@ const CourseManagement: React.FC = () => {
       // add to currently editing program
       const updatedProgram: Program = {
         ...selectedProgram,
-        courses: [...selectedProgram.courses, newCourse]
+        courses: [...selectedProgram.courses!!, newCourse]
       };
       setSelectedProgram(updatedProgram);
       setSelectedCourse(newCourse);
@@ -199,7 +200,7 @@ const CourseManagement: React.FC = () => {
 
     const updatedProgram: Program = {
       ...selectedProgram,
-      courses: selectedProgram.courses.map(c => (c.id === updatedCourse.id ? updatedCourse : c))
+      courses: selectedProgram.courses!.map(c => (c.id === updatedCourse.id ? updatedCourse : c))
     };
 
     setSelectedCourse(updatedCourse);
@@ -216,7 +217,7 @@ const CourseManagement: React.FC = () => {
 
     const updatedProgram: Program = {
       ...selectedProgram,
-      courses: selectedProgram.courses.map(c => (c.id === updatedCourse.id ? updatedCourse : c))
+      courses: selectedProgram.courses!.map(c => (c.id === updatedCourse.id ? updatedCourse : c))
     };
 
     setSelectedCourse(updatedCourse);
@@ -231,11 +232,13 @@ const CourseManagement: React.FC = () => {
       videos: selectedCourse.videos.filter(v => v.id !== videoId)
     };
 
+
     const updatedProgram: Program = {
       ...selectedProgram,
-      courses: selectedProgram.courses.map(c => (c.id === updatedCourse.id ? updatedCourse : c))
+      courses: selectedProgram.courses!.map(c => (c.id === updatedCourse.id ? updatedCourse : c))
     };
 
+    deleteVideo(videoId)
     setSelectedCourse(updatedCourse);
     setSelectedProgram(updatedProgram);
   };
@@ -248,111 +251,112 @@ const CourseManagement: React.FC = () => {
 
     const updatedProgram: Program = {
       ...selectedProgram,
-      courses: selectedProgram.courses.map(c => (c.id === updatedCourse.id ? updatedCourse : c))
+      courses: selectedProgram.courses!.map(c => (c.id === updatedCourse.id ? updatedCourse : c))
     };
 
     setSelectedCourse(updatedCourse);
     setSelectedProgram(updatedProgram);
   };
 
+  // TODO: Figure out if this is needed and renable but for now this isnt doing anything anymore so deprecated logic
   // When user deletes a course from the program list (not while editing), remove it and save program
-  const handleDeleteCourse = async (courseId: string) => {
-    // If editing this program and deleting from editor:
-    if (selectedProgram) {
-      if (!selectedProgram.courses.find(c => c.id === courseId)) return;
-      // confirm
-      if (!confirm('Are you sure you want to delete this course from the program?')) return;
+  // const handleDeleteCourse = async (courseId: string) => {
+  //   // If editing this program and deleting from editor:
+  //   if (selectedProgram) {
+  //     if (!selectedProgram.courses!.find(c => c.id === courseId)) return;
+  //     // confirm
+  //     if (!confirm('Are you sure you want to delete this course from the program?')) return;
 
-      const updatedProgram: Program = {
-        ...selectedProgram,
-        courses: selectedProgram.courses.filter(c => c.id !== courseId)
-      };
+  //     const updatedProgram: Program = {
+  //       ...selectedProgram,
+  //       courses: selectedProgram.courses!.filter(c => c.id !== courseId)
+  //     };
 
-      setSelectedProgram(updatedProgram);
-      // if we deleted the currently selectedCourse, clear it or pick another
-      if (selectedCourse?.id === courseId) {
-        setSelectedCourse(updatedProgram.courses.length > 0 ? updatedProgram.courses[0] : null);
-      }
+  //     setSelectedProgram(updatedProgram);
+  //     // if we deleted the currently selectedCourse, clear it or pick another
+  //     if (selectedCourse?.id === courseId) {
+  //       setSelectedCourse(updatedProgram.courses!.length > 0 ? updatedProgram.courses![0] : null);
+  //     }
 
-      // persist change
-      try {
-        const result = await saveProgram(updatedProgram);
-        if (result.success) {
-          await loadExistingPrograms();
-        } else {
-          console.error('Failed to save program after deleting course', result.error);
-        }
-      } catch (err) {
-        console.error('Error saving program after deleting course:', err);
-      }
-      setActiveDropdown(null);
-      return;
-    }
+  //     // persist change
+  //     try {
+  //       const result = await saveProgram(updatedProgram);
+  //       if (result.success) {
+  //         await loadExistingPrograms();
+  //       } else {
+  //         console.error('Failed to save program after deleting course', result.error);
+  //       }
+  //     } catch (err) {
+  //       console.error('Error saving program after deleting course:', err);
+  //     }
+  //     setActiveDropdown(null);
+  //     return;
+  //   }
 
-    // Otherwise, find program in existingPrograms and remove course, then save program
-    let foundProgram: Program | null = null;
-    existingPrograms.forEach(program => {
-      if (program.courses.some(c => c.id === courseId)) foundProgram = program;
-    });
+  //   // Otherwise, find program in existingPrograms and remove course, then save program
+  //   let foundProgram: Program | undefined;
+  //   existingPrograms.forEach(program => {
+  //     if (program.courses!.some(c => c.id === courseId)) foundProgram = program;
+  //   });
 
-    if (!foundProgram) {
-      console.warn('Course not found in any program');
-      setActiveDropdown(null);
-      return;
-    }
+  //   if (!foundProgram) {
+  //     console.warn('Course not found in any program');
+  //     setActiveDropdown(null);
+  //     return;
+  //   }
 
-    if (!confirm('Are you sure you want to delete this course?')) {
-      setActiveDropdown(null);
-      return;
-    }
+  //   if (!confirm('Are you sure you want to delete this course?')) {
+  //     setActiveDropdown(null);
+  //     return;
+  //   }
 
-    const updatedProgram = { ...foundProgram, courses: foundProgram.courses.filter(c => c.id !== courseId) };
+  //   const updatedProgram = { ...foundProgram, courses: foundProgram.courses!.filter(c => c.id !== courseId) };
 
-    try {
-      const result = await saveProgram(updatedProgram);
-      if (result.success) {
-        await loadExistingPrograms();
-      } else {
-        console.error('Error deleting course:', result.error);
-      }
-    } catch (error) {
-      console.error('Error deleting course:', error);
-    }
-    setActiveDropdown(null);
-  };
+  //   try {
+  //     const result = await saveProgram(updatedProgram);
+  //     if (result.success) {
+  //       await loadExistingPrograms();
+  //     } else {
+  //       console.error('Error deleting course:', result.error);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error deleting course:', error);
+  //   }
+  //   setActiveDropdown(null);
+  // };
 
-  // Duplicate a course (program-level). Creates new ids for course + videos.
-  const handleDuplicateCourse = async (programId: string, courseId: string) => {
-    const program = existingPrograms.find(p => p.id === programId);
-    if (!program) return;
+  // // Duplicate a course (program-level). Creates new ids for course + videos.
+  // const handleDuplicateCourse = async (programId: string, courseId: string) => {
+  //   const program = existingPrograms.find(p => p.id === programId);
+  //   if (!program) return;
 
-    const original = program.courses.find(c => c.id === courseId);
-    if (!original) return;
+  //   const original = program.courses!.find(c => c.id === courseId);
+  //   if (!original) return;
 
-    const duplicated: Course = {
-      ...JSON.parse(JSON.stringify(original)),
-      id: generateId(),
-      title: `${original.title} (Copy)`,
-      videos: (original.videos || []).map(v => ({ ...v, id: generateId() }))
-    };
+  //   const duplicated: Course = {
+  //     ...JSON.parse(JSON.stringify(original)),
+  //     id: generateId(),
+  //     title: `${original.title} (Copy)`,
+  //     videos: (original.videos || []).map(v => ({ ...v, id: generateId() }))
+  //   };
 
-    const updatedProgram: Program = {
-      ...program,
-      courses: [...program.courses, duplicated]
-    };
+  //   const updatedProgram: Program = {
+  //     ...program,
+  //     courses: [...program.courses!, duplicated]
+  //   };
 
-    try {
-      const result = await saveProgram(updatedProgram);
-      if (result.success) {
-        await loadExistingPrograms();
-      } else {
-        console.error('Error duplicating course:', result.error);
-      }
-    } catch (err) {
-      console.error('Error duplicating course:', err);
-    }
-    setActiveDropdown(null);
-  };
+  //   try {
+  //     const result = await saveProgram(updatedProgram);
+  //     if (result.success) {
+  //       await loadExistingPrograms();
+  //     } else {
+  //       console.error('Error duplicating course:', result.error);
+  //     }
+  //   } catch (err) {
+  //     console.error('Error duplicating course:', err);
+  //   }
+  //   setActiveDropdown(null);
+  // };
 
   const toggleDropdown = (id: string, event: React.MouseEvent) => {
     event.stopPropagation();
@@ -376,7 +380,7 @@ const CourseManagement: React.FC = () => {
             <button className={styles.backBtn} onClick={handleBackToCourseList}>
               ←
             </button>
-            <h2 style={{background: 'transparent'}}>Edit Program</h2>
+            <h2 style={{ background: 'transparent' }}>Edit Program</h2>
           </div>
           <div className={styles.headerActions}>
             <button
@@ -399,7 +403,7 @@ const CourseManagement: React.FC = () => {
         {/* Program Info Section */}
         <div className={styles.formSection}>
           <div className={styles.sectionHeader}>
-            <h2 style={{background: 'transparent'}} className={styles.sectionTitle}>Program Information</h2>
+            <h2 style={{ background: 'transparent' }} className={styles.sectionTitle}>Program Information</h2>
           </div>
 
           <div className={styles.formRow}>
@@ -417,18 +421,18 @@ const CourseManagement: React.FC = () => {
         {/* Course Info Section */}
         <div className={styles.formSection}>
           <div className={styles.sectionHeader}>
-            <h2 style={{background: 'transparent'}} className={styles.sectionTitle}>Course Information</h2>
+            <h2 style={{ background: 'transparent' }} className={styles.sectionTitle}>Course Information</h2>
             <div style={{ marginLeft: 'auto' }}>
               {/* quick course switcher */}
               <select
                 value={selectedCourse?.id || ''}
                 onChange={(e) => {
                   const cid = e.target.value;
-                  const c = selectedProgram.courses.find(x => x.id === cid) || null;
+                  const c = selectedProgram.courses!.find(x => x.id === cid) || null;
                   setSelectedCourse(c);
                 }}
               >
-                {selectedProgram.courses.map(c => (
+                {selectedProgram.courses!.map(c => (
                   <option key={c.id} value={c.id}>
                     {c.title || 'Untitled Course'}
                   </option>
@@ -494,7 +498,7 @@ const CourseManagement: React.FC = () => {
         {/* Videos Section */}
         <div className={styles.formSection}>
           <div className={styles.sectionHeader}>
-            <h2 style={{background: 'transparent'}} className={styles.sectionTitle}>
+            <h2 style={{ background: 'transparent' }} className={styles.sectionTitle}>
               Exercise Videos ({selectedCourse ? (selectedCourse.videos?.length ?? 0) : 0})
             </h2>
             <button className={`${styles.btn} ${styles.btnPrimary} ${styles.btnSm}`} onClick={handleAddVideo}>
@@ -505,31 +509,22 @@ const CourseManagement: React.FC = () => {
 
           <div className={styles.videoList}>
             {/* render courses and their videos */}
-            {selectedProgram.courses.map((course, courseIndex) => (
+            {selectedProgram.courses!.map((course) => (
               <div key={course.id} className={styles.videoItem}>
-                <div className={styles.quickActions}>
-                  <button
-                    className={styles.iconBtn}
-                    title="Duplicate"
-                    onClick={() => handleDuplicateCourse(selectedProgram.id, course.id)}
-                  >
-                    📋
-                  </button>
-
-                  <button
-                    className={styles.iconBtn}
-                    title="Delete"
-                    onClick={() => handleDeleteCourse(course.id)}
-                  >
-                    <Trash2 size={16} />
-                  </button>
-                </div>
-
                 {course.videos?.map((video, videoIndex) => (
                   <div key={video.id} className={styles.videoWrapper}>
                     <div className={styles.videoHeader}>
                       <span className={styles.dragHandle}>⋮⋮</span>
                       <span className={styles.videoNumber}>{videoIndex + 1}</span>
+                      <div className={styles.quickActions}>
+                        <button
+                          className={styles.iconBtn}
+                          title="Delete"
+                          onClick={() => handleDeleteVideo(video.id)}
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
                       <div className={styles.videoContent}>
                         <input
                           type="text"
@@ -568,7 +563,7 @@ const CourseManagement: React.FC = () => {
 
                     <textarea
                       className={`${styles.formControl} ${styles.videoDescription}`}
-                      style={{width: "90%"}}
+                      style={{ width: "90%" }}
                       value={video.description}
                       onChange={(e) => handleUpdateVideo(video.id, { description: e.target.value })}
                       placeholder="Video description..."
@@ -598,7 +593,7 @@ const CourseManagement: React.FC = () => {
       {/* Course Selection Section */}
       <div className={styles.courseSelection}>
         <div className={styles.selectionHeader}>
-          <h2 style={{background: "transparent"}} className={styles.sectionTitle}>Select Program to Edit</h2>
+          <h2 style={{ background: "transparent" }} className={styles.sectionTitle}>Select Program to Edit</h2>
         </div>
 
         {/* Search and Filter */}
@@ -658,13 +653,13 @@ const CourseManagement: React.FC = () => {
                 <div
                   key={program.id}
                   className={styles.courseCard}
-                  onClick={() => handleEditProgram(program.id)}
+                  onClick={() => handleEditProgram(program.id!)}
                 >
                   <div className={styles.courseActions}>
                     <div className={`${styles.dropdown} ${activeDropdown === program.id ? styles.active : ''}`}>
                       <button
                         className={styles.dropdownBtn}
-                        onClick={(e) => toggleDropdown(program.id, e)}
+                        onClick={(e) => toggleDropdown(program.id!, e)}
                       >
                         ⋮
                       </button>
@@ -676,7 +671,7 @@ const CourseManagement: React.FC = () => {
                               // delete entire program (confirm)
                               if (!confirm('Delete this program?')) return;
                               saveProgram({ ...program, courses: program.courses }).then(() => loadExistingPrograms()).catch(console.error);
-                              deleteProgram(program.id);
+                              deleteProgram(program.id!);
                             }}
                             style={{ color: '#e53e3e' }}
                           >

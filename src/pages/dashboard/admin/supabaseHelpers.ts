@@ -5,6 +5,7 @@ export interface ExerciseVideo {
   id: string;
   title: string;
   description: string;
+  difficulty?: string;
   videoUrl?: string;
   duration: string;
   order: number;
@@ -23,7 +24,7 @@ export interface Course {
 export interface Program {
   id?: string;
   title: string;
-  courses: Course[];
+  courses?: Course[];
   description?: string;
   image_url?: string;
   is_active?: boolean;
@@ -85,7 +86,7 @@ function durationToSeconds(duration: string): number | null {
 }
 
 // Helper function to convert seconds to duration string
-function secondsToDuration(seconds: number | null): string {
+function secondsToDuration(seconds: number | undefined): string {
   if (!seconds) return '';
   
   const minutes = Math.floor(seconds / 60);
@@ -150,8 +151,8 @@ export async function saveProgram(program: Program): Promise<{ success: boolean;
     const programId = programData.id;
 
     // Save courses
-    for (let courseIndex = 0; courseIndex < program.courses.length; courseIndex++) {
-      const course = program.courses[courseIndex];
+    for (let courseIndex = 0; courseIndex < program.courses!.length; courseIndex++) {
+      const course = program.courses![courseIndex];
       
       const { data: courseData, error: courseError } = await supabaseAdmin
         .from('courses')
@@ -340,6 +341,21 @@ export async function deleteProgram(programId: string): Promise<boolean> {
   }
 }
 
+export async function deleteVideo(videoId: string): Promise<boolean> {
+  try {
+    const { error } = (await supabaseAdmin.from('videos').delete().eq('id', videoId));
+
+    if (error) {
+      console.error("Error delete video", error)
+      return false
+    }
+    return true;
+  } catch (error) {
+    console.error("Error in deleteVideo:", error);
+    return false;
+  }
+}
+
 // Enroll user in program
 export async function enrollUserInProgram(
   userId: string, 
@@ -416,7 +432,7 @@ export async function updateVideoProgress(
 
     if (!videoData) return false;
 
-    const { data: courseProgressData, error: courseProgressError } = await supabaseAdmin
+    const { data: courseProgressData } = await supabaseAdmin
       .from('user_course_progress')
       .select('id')
       .eq('user_id', userId)

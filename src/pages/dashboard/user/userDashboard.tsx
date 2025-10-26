@@ -33,8 +33,6 @@ const EnrolledPrograms = ({ userId }: { userId: string }) => {
   if (loading) return <h1>Loading...</h1>;
   if (error) return <h1>{error}</h1>;
 
-  console.log("UserId", userId)
-
   return (
     <div>
       <h1>Enrolled</h1>
@@ -54,7 +52,6 @@ const AvailablePrograms = ({ userId }: { userId: string }) => {
       try {
         setLoading(true);
         const programs = await getAvailablePrograms(userId);
-        console.log("Programs", programs)
         setPrograms(programs);
       } catch (err) {
         console.error("Error fetching programs:", err)
@@ -75,7 +72,6 @@ const AvailablePrograms = ({ userId }: { userId: string }) => {
 
       setPrograms(programs.filter(p => p.id !== programId));
 
-      console.log("Successfully enrolled in program");
     } catch (err) {
       console.error("Error enrolling in program:", err);
       setError("Failed to enroll in program");

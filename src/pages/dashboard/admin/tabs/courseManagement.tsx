@@ -38,7 +38,6 @@ const CourseManagement: React.FC = () => {
     setIsLoading(true);
     try {
       const programs = await getAllPrograms();
-      console.log("Programs", programs);
       setExistingPrograms(programs);
     } catch (error) {
       console.error('Error loading programs:', error);
@@ -156,7 +155,6 @@ const CourseManagement: React.FC = () => {
     if (!selectedProgram) return;
     setSaveStatus('saving');
     try {
-      console.log("SelectedProgram", selectedProgram)
       const result = await saveProgram(selectedProgram);
 
       if (result.success) {

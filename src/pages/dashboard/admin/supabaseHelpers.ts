@@ -407,8 +407,6 @@ export async function getUserEnrolledPrograms(userId: string): Promise<any[]> {
       return [];
     }
 
-    console.log("Data", data)
-
     return data || [];
   } catch (error) {
     console.error('Error in getUserEnrolledPrograms:', error);

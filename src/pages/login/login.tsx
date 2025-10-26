@@ -20,7 +20,6 @@ export default function Login() {
     setLoading(false)
     if (error) setError(error.message)
     else window.location.href = "/dashboard/home"
-    console.log("Error Message", error)
   }
 
   return (
@@ -47,7 +46,6 @@ export default function Login() {
                 onChange={(e) => setPassword(e.target.value)}
               />
               <Button text="login" primary onButtonClick={() => {
-                console.log("Login");
                 handleLogin();
               }} />
             </form>

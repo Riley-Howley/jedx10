@@ -6,7 +6,6 @@ import { useCurrentUser } from '../../../context/UserContext';
 
 const EnrolledPrograms = ({ userId }: { userId: string }) => {
   const [userPrograms, setUserPrograms] = useState<any[]>([]);
-  const [programs, setPrograms] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -35,8 +34,52 @@ const EnrolledPrograms = ({ userId }: { userId: string }) => {
 
   return (
     <div>
-      <h1>Enrolled</h1>
-      <pre>{JSON.stringify(userPrograms, null, 2)}</pre>
+      {userPrograms.map((program) => (
+        <div className={styles.enrollProgram}>
+          <div className={styles.enrollProgramRow}>
+            <div>
+              <h1>{program.programs.title}</h1>
+              <p style={{
+                color: '#52525b',
+              }}>ELITE TRAINING SYSTEM</p>
+            </div>
+            <div>
+              <p style={{
+                textAlign: 'right',
+                fontSize: 30,
+              }}>16%</p>
+              <p style={{
+                color: '#52525b',
+                fontSize: 12,
+              }}>COMPLETE</p>
+            </div>
+          </div>
+          {/* Progress bar */}
+          <div className={styles.progressBarContainer}>
+            <div
+              className={styles.progressBarFill}
+              // TODO - Add progress to enrollment
+              // style={{ width: `${enrolledPrograms[0].progress || 10}%` }}
+              style={{ width: `${50}%` }} 
+
+            />
+          </div>
+          <div>
+            {/* Show the next course */}
+            <div className={styles.enrollProgramNextCourse}>
+              <div>
+                <h4>NEXT WORKOUT</h4>
+                <p style={{
+                  color: '#52525b',
+                }}>Core Stability Flow</p>
+              </div>
+              <button className={styles.startButton}>
+                START
+              </button>
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 };

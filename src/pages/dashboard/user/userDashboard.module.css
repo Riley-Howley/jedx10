@@ -114,102 +114,102 @@
 
 .availableHeader {
     margin-bottom: 3rem;
-  }
-  
-  .availableTitle {
+}
+
+.availableTitle {
     font-size: 2.5rem;
     font-weight: 900;
     color: #ffffff;
     margin: 0 0 0.5rem 0;
     letter-spacing: -0.05em;
-  }
-  
-  .availableDescription {
+}
+
+.availableDescription {
     color: #71717a;
     font-size: 0.875rem;
     margin: 0;
-  }
-  
-  .programContainer {
+}
+
+.programContainer {
     border: 1px solid #27272a;
     transition: border-color 0.3s;
     display: flex;
     flex-direction: column;
     overflow: hidden;
     margin-bottom: 30px;
-  }
-  
-  .programContainer:hover {
+}
+
+.programContainer:hover {
     border-color: #ffffff;
-  }
-  
-  .programContent {
+}
+
+.programContent {
     padding: 1.5rem;
     flex: 1;
-  }
-  
-  .programTitle {
+}
+
+.programTitle {
     font-size: 1.875rem;
     font-weight: 900;
     color: #ffffff;
     margin: 0 0 0.5rem 0;
     letter-spacing: -0.05em;
     line-height: 1.2;
-  }
-  
-  .programDescription {
+}
+
+.programDescription {
     font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.15em;
     color: #52525b;
     margin: 0 0 2rem 0;
     font-weight: 600;
-  }
-  
-  .programDetailsContainer {
+}
+
+.programDetailsContainer {
     display: flex;
     justify-content: space-between;
     gap: 2rem;
-  }
-  
-  .programDetailItems,
-  .programDetailValues {
+}
+
+.programDetailItems,
+.programDetailValues {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-  }
-  
-  .programDetailItems h4 {
+}
+
+.programDetailItems h4 {
     margin: 0;
     font-size: 0.875rem;
     color: #52525b;
     font-weight: 400;
-  }
-  
-  .programDetailValues h4 {
+}
+
+.programDetailValues h4 {
     margin: 0;
     font-size: 0.875rem;
     color: #ffffff;
     font-weight: 600;
-  }
-  
-  .programFooter {
+}
+
+.programFooter {
     margin-top: auto;
-  }
-  
-  .line {
+}
+
+.line {
     margin: 0;
     border: none;
     height: 1px;
     background-color: #27272a;
     transition: background-color 0.3s;
-  }
-  
-  .programContainer:hover .line {
+}
+
+.programContainer:hover .line {
     background-color: #ffffff;
-  }
-  
-  .enrollButton {
+}
+
+.enrollButton {
     width: 100%;
     padding: 1rem;
     background-color: rgba(24, 24, 27, 0.5);
@@ -221,21 +221,70 @@
     font-weight: 700;
     cursor: pointer;
     transition: all 0.3s;
-  }
-  
-  .enrollButton:hover {
+}
+
+.enrollButton:hover {
     color: #000000;
     background-color: #ffffff;
-  }
-  
-  .enrollButton:disabled {
+}
+
+.enrollButton:disabled {
     opacity: 0.5;
     cursor: not-allowed;
     background-color: rgba(24, 24, 27, 0.5);
     color: #ffffff;
-  }
-  
-  .enrollButton:disabled:hover {
+}
+
+.enrollButton:disabled:hover {
     color: #ffffff;
     background-color: rgba(24, 24, 27, 0.5);
-  }
+}
+
+.enrollProgram {
+    border: 2px solid #232325;
+    padding: 20px;
+    background-color: '#1D1D1F';
+    margin-bottom: 30px;
+}
+
+.enrollProgramRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.enrollProgramNextCourse {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid #333339;
+    background-color: #1D1D1F;
+    padding: 0px 20px;
+    height: 70px;
+}
+
+.startButton {
+    padding: 10;
+    width: 94px;
+    height: 32px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+
+
+.progressBarContainer {
+    height: 1px;
+    background-color: #27272a;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+}
+
+.progressBarFill {
+    height: 100%;
+    background-color: #ffffff;
+    transition: width 1s ease;
+}

@@ -25,6 +25,7 @@ const CourseManagement: React.FC = () => {
   const [typeFilter, setTypeFilter] = useState('');
   const [difficultyFilter, setDifficultyFilter] = useState('');
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [isPaid, setIsPaid] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const [existingPrograms, setExistingPrograms] = useState<Program[]>([]);
@@ -136,6 +137,10 @@ const CourseManagement: React.FC = () => {
         id: generateId(),
         title: 'New Program',
         description: '',
+        duration: '',
+        difficulty: '',
+        focus: '',
+        cost: '',
         courses: [newCourse]
       };
       setSelectedProgram(newProgram);
@@ -406,13 +411,85 @@ const CourseManagement: React.FC = () => {
           </div>
 
           <div className={styles.formRow}>
-            <label className={styles.formLabel}>Program Title</label>
+            <label className={styles.formLabel}>Title</label>
             <input
               type="text"
               className={styles.inlineEdit}
               value={selectedProgram.title}
               onChange={(e) => setSelectedProgram({ ...selectedProgram, title: e.target.value })}
               placeholder="Enter program title"
+            />
+          </div>
+
+          <div className={styles.formRow}>
+            <label className={styles.formLabel}>Desciption</label>
+            <textarea
+              className={styles.formControl}
+              rows={3}
+              value={selectedProgram!.description}
+              onChange={(e) => setSelectedProgram({ ...selectedProgram, description: e.target.value })}
+              placeholder="Brief description of the program..."
+            />
+          </div>
+
+          <div className={styles.formRow}>
+            <label className={styles.formLabel}>Duration</label>
+            <input
+              type="text"
+              className={styles.inlineEdit}
+              value={selectedProgram.duration}
+              onChange={(e) => setSelectedProgram({ ...selectedProgram, duration: e.target.value })}
+              placeholder="8 Weeks... 4 months..."
+            />
+          </div>
+
+          <div className={styles.formRow}>
+            <label className={styles.formLabel}>Difficulty</label>
+            <select value={selectedProgram.difficulty} onChange={(e) => setSelectedProgram({ ...selectedProgram, difficulty: e.target.value })}
+              className={styles.formInput} name="difficulty" defaultValue="">
+              <option value="" disabled>Select difficulty</option>
+              <option value="beginner">Beginner</option>
+              <option value="intermediate">Intermediate</option>
+              <option value="advanced">Advanced</option>
+              <option value="expert">Expert</option>
+            </select>
+          </div>
+
+
+          <div className={styles.formRow}>
+            <label className={styles.formLabel}>
+              <input
+                style={{ marginRight: '10px' }}
+                type="checkbox"
+                checked={isPaid}
+                onChange={(e) => setIsPaid(e.target.checked)}
+              />
+              {/* TODO - Add payments for Programs */}
+              Paid (Not working)
+            </label>
+
+            {isPaid && (
+              <div className={styles.formRow}>
+                <input
+                  type="number"
+                  className={styles.inlineEdit}
+                  name="cost"
+                  placeholder="Enter cost"
+                  value={selectedProgram.cost}
+                  onChange={(e) => setSelectedProgram({ ...selectedProgram, cost: e.target.value.toString() })}
+                />
+              </div>
+            )}
+          </div>
+
+          <div className={styles.formRow}>
+            <label className={styles.formLabel}>Focus</label>
+            <input
+              type="text"
+              className={styles.inlineEdit}
+              value={selectedProgram.focus}
+              onChange={(e) => setSelectedProgram({ ...selectedProgram, focus: e.target.value })}
+              placeholder="Cardio..."
             />
           </div>
         </div>

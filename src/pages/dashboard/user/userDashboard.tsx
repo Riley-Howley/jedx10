@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import styles from './userDashboard.module.css';
 import { Lock } from 'lucide-react';
-import { enrollUserInProgram, getAvailablePrograms, getUserEnrolledPrograms, type DBProgram } from '../admin/supabaseHelpers';
+import { enrollUserInProgram, getAvailablePrograms, getUserEnrolledPrograms, loadProgram, type DBProgram } from '../admin/supabaseHelpers';
 import { useCurrentUser } from '../../../context/UserContext';
 
 const EnrolledPrograms = ({ userId }: { userId: string }) => {
@@ -31,6 +31,15 @@ const EnrolledPrograms = ({ userId }: { userId: string }) => {
 
   if (loading) return <h1>Loading...</h1>;
   if (error) return <h1>{error}</h1>;
+
+  const handleLoadProgram = (programId: string) => {
+
+    console.log("ProgramId", programId);
+
+    const data = loadProgram(programId);
+
+    console.log("Data", data)
+  }
 
   return (
     <div>
@@ -73,13 +82,15 @@ const EnrolledPrograms = ({ userId }: { userId: string }) => {
                   color: '#52525b',
                 }}>Core Stability Flow</p>
               </div>
-              <button className={styles.startButton}>
+              <button onClick={() => handleLoadProgram(program.programs.id)} className={styles.startButton}>
                 START
               </button>
             </div>
           </div>
         </div>
       ))}
+      {/* TODO - Better empty states */}
+      {userPrograms.length === 0 && <h1>Enroll in a program lazy shit</h1>}
     </div>
   );
 };
@@ -139,14 +150,14 @@ const AvailablePrograms = ({ userId }: { userId: string }) => {
             <p className={styles.programDescription}>{prog.description || "ADVANCED PERFORMANCE"}</p>
             <div className={styles.programDetailsContainer}>
               <div className={styles.programDetailItems}>
-                <h4>Duration</h4>
-                <h4>Difficulty</h4>
-                <h4>Focus</h4>
+                <h4>DURATION</h4>
+                <h4>DIFFICULTY</h4>
+                <h4>FOCUS</h4>
               </div>
               <div className={styles.programDetailValues}>
-                <h4>8 Weeks</h4>
-                <h4>{'Advanced'}</h4>
-                <h4>{'Strength & Power'}</h4>
+                <h4>{prog.duration.toUpperCase()}</h4>
+                <h4>{prog.difficulty.toUpperCase()}</h4>
+                <h4>{prog.focus.toUpperCase()}</h4>
               </div>
             </div>
           </div>
@@ -167,6 +178,7 @@ const AvailablePrograms = ({ userId }: { userId: string }) => {
           </div>
         </div>
       ))}
+      {programs.length === 0 && <h1>No more programs</h1>}
     </div>);
 };
 

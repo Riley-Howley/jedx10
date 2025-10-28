@@ -24,8 +24,12 @@ export interface Course {
 export interface Program {
   id?: string;
   title: string;
-  courses?: Course[];
   description?: string;
+  duration: string;
+  difficulty: string;
+  focus: string;
+  cost: string;
+  courses?: Course[];
   image_url?: string;
   is_active?: boolean;
 }
@@ -35,6 +39,10 @@ export interface DBProgram {
   id: string;
   title: string;
   description?: string;
+  duration: string;
+  difficulty: string;
+  focus: string;
+  cost: string;
   image_url?: string;
   is_active: boolean;
   created_at: string;
@@ -135,6 +143,10 @@ export async function saveProgram(program: Program): Promise<{ success: boolean;
         id: program.id,
         title: program.title,
         description: program.description,
+        duration: program.duration,
+        difficulty: program.difficulty,
+        focus: program.focus,
+        cost: program.cost,
         image_url: program.image_url,
         is_active: true
       }, {
@@ -291,6 +303,10 @@ export async function loadProgram(programId: string): Promise<Program | null> {
       id: programData.id,
       title: programData.title,
       description: programData.description,
+      duration: programData.duration,
+      difficulty: programData.difficulty,
+      focus: programData.focus,
+      cost: programData.cost,
       image_url: programData.image_url,
       courses
     };

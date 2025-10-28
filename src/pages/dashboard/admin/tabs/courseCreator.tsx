@@ -10,6 +10,11 @@ const generateId = () => uuidv4();
 const CourseCreator: React.FC = () => {
   const [program, setProgram] = useState<Program>({
     title: '',
+    description: '',
+    duration: '',
+    difficulty: '',
+    focus: '',
+    cost: '',
     courses: []
   });
 
@@ -208,6 +213,11 @@ const CourseCreator: React.FC = () => {
   const createNewProgram = () => {
     setProgram({
       title: '',
+      description: '',
+      duration: '',
+      difficulty: '',
+      focus: '',
+      cost: '',
       courses: []
     });
     setSelectedProgramId('');

@@ -60,7 +60,7 @@ const UserDropdown = ({ onSettings, onPreferences }: UserDropdownProps) => {
       console.warn("No session found!");
     } else {
       await supabase.auth.signOut();
-      window.location.href = "/"
+      window.location.href = "/login"
     }
   }
 

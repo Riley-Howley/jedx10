@@ -1,0 +1,152 @@
+.programStructure {
+    color: #ffffff;
+    padding: 60px 40px;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', sans-serif;
+    max-width: 1400px;
+  }
+  
+  .programHeader {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    color: #4a4a4a;
+    margin: 0 0 60px 0;
+  }
+  
+  .phasesContainer {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  
+  .phaseItem {
+    display: grid;
+    grid-template-columns: 80px 1fr;
+    gap: 40px;
+    position: relative;
+    padding: 30px 0;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  .phaseItem:hover:not(.locked) {
+    background-color: rgba(255, 255, 255, 0.03);
+  }
+  
+  .phaseItem.locked {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+  
+  .phaseItem::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background-color: #252525;
+  }
+  
+  .phaseItem.active::before {
+    background: white;
+  }
+  
+  .phaseLeft {
+    display: flex;
+    align-items: flex-start;
+    padding-left: 24px;
+    padding-top: 4px;
+  }
+  
+  .phaseNumber {
+    font-size: 15px;
+    color: #3a3a3a;
+    font-weight: 500;
+  }
+  
+  .phaseItem.active .phaseNumber {
+    color: #ffffff;
+    font-weight: 600;
+  }
+  
+  .phaseRight {
+    flex: 1;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 30px;
+    padding-right: 40px;
+  }
+  
+  .phaseContent {
+    flex: 1;
+  }
+  
+  .phaseTitle {
+    font-size: 36px;
+    font-weight: 700;
+    margin: 0 0 12px 0;
+    color: #ffffff;
+    letter-spacing: -0.8px;
+    line-height: 1.1;
+  }
+  
+  .phaseItem.locked .phaseTitle {
+    color: #2a2a2a;
+  }
+  
+  .phaseItem.locked {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+  
+  .phaseDescription {
+    font-size: 17px;
+    color: #555;
+    margin: 0;
+    line-height: 1.5;
+  }
+  
+  .phaseItem.active .phaseDescription {
+    color: #7a7a7a;
+  }
+  
+  .lockIcon {
+    display: flex;
+    align-items: flex-start;
+    padding-top: 8px;
+    color: #2a2a2a;
+    flex-shrink: 0;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .programStructure {
+      padding: 40px 20px;
+    }
+  
+    .phaseItem {
+      grid-template-columns: 60px 1fr;
+      gap: 20px;
+      padding: 20px 0;
+    }
+  
+    .phaseLeft {
+      padding-left: 16px;
+    }
+  
+    .phaseTitle {
+      font-size: 26px;
+    }
+  
+    .phaseDescription {
+      font-size: 15px;
+    }
+  
+    .phaseRight {
+      padding-right: 20px;
+      gap: 15px;
+    }
+  }

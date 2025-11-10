@@ -1,0 +1,49 @@
+.dashboard {
+    gap: 3rem;
+    padding: 2rem;
+    min-height: 100vh;
+    color: white;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+}
+
+.header {
+    border-bottom: 1px solid rgba(39, 39, 42, 0.5);
+}
+
+.headerContent {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem 2rem;
+}
+
+.headerTitle {
+    font-size: 4.5rem;
+    font-weight: 900;
+    color: #ffffff;
+    margin: 0 0 0.5rem 0;
+    letter-spacing: -0.05em;
+    line-height: 1;
+}
+
+.headerSubtitle {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.headerLine {
+    width: 4rem;
+    height: 1px;
+    border: none;
+    background-color: #3f3f46;
+    margin: 0;
+}
+
+.headerText {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: #71717a;
+    margin: 0;
+    font-weight: 600;
+}

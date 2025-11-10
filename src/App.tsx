@@ -9,6 +9,7 @@ import AdminDashboard from './pages/dashboard/admin/adminDashboard';
 import UserDashboard from './pages/dashboard/user/userDashboard';
 import { useCurrentUser } from './context/UserContext';
 import type { JSX } from 'react';
+import ProgramPage from './pages/dashboard/user/ProgramPage';
 
 function PrivateRoute({ element }: { element: JSX.Element }) {
   const { user, loading } = useCurrentUser(); 
@@ -39,7 +40,7 @@ export default function App() {
                 : <UserDashboard />
             }
           />
-          <Route path="program/:programId" element={<h1>Program page</h1>} />
+          <Route path="program/:programId" element={<ProgramPage />} />
         </Route>
 
         <Route path="*" element={<Home />} />

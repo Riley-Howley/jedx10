@@ -82,7 +82,11 @@ const EnrolledPrograms = ({ userId }: { userId: string }) => {
                   color: '#52525b',
                 }}>Core Stability Flow</p>
               </div>
-              <button onClick={() => handleLoadProgram(program.programs.id)} className={styles.startButton}>
+              {/* TODO - Start for 0, Resume for > 0 < 100, Completed for 100 */}
+              {/* handleLoadProgram(program.programs.id) */}
+              <button onClick={() => {
+                window.location.href = `/dashboard/program/${program.program_id}`
+              }} className={styles.startButton}>
                 START
               </button>
             </div>

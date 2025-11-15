@@ -77,16 +77,15 @@ const EnrolledPrograms = ({ userId }: { userId: string }) => {
           <div>
             {/* Show the next course */}
             <div className={styles.enrollProgramNextCourse}>
-              <div>
+              {/* TODO - reenable this when can be fucked */}
+              {/* <div>
                 <h4>NEXT WORKOUT</h4>
                 <p style={{
                   color: '#52525b',
                 }}>Core Stability Flow</p>
-              </div>
-              {/* TODO - Start for 0, Resume for > 0 < 100, Completed for 100 */}
-              {/* handleLoadProgram(program.programs.id) */}
+              </div> */}
+              
               <button onClick={() => {
-                console.log('program', program)
                 window.location.href = `/dashboard/program/${program.id}`
               }} className={styles.startButton}>
                 START
@@ -142,8 +141,6 @@ const AvailablePrograms = ({ userId }: { userId: string }) => {
 
   if (loading) return <h1>Loading...</h1>;
   if (error) return <h1>{error}</h1>;
-
-  console.log('programs to enrol', programs)
 
   return (
     <div>

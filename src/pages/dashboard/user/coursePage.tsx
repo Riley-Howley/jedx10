@@ -36,8 +36,6 @@ const CoursePage = () => {
         handleLoadCourse(courseId as string);
     }, [courseId]);
 
-    console.log('course', course)
-
     return (
         <div style={{ backgroundColor: '#121214' }} className={styles.dashboard}>
             <div className={styles.header}>

@@ -3,7 +3,6 @@
     padding: 20px 40px;
     min-height: 100vh;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', sans-serif;
-    max-width: 1400px;
 }
 
 .subtitle {
@@ -56,8 +55,10 @@
 /* Disclaimer Banner */
 .disclaimerBanner {
     background: #18181b;
-    border-top: 1px solid #27272a;
-    border-bottom: 1px solid #27272a;
+    border: 1px solid #27272a;
+    border-radius: 0.5rem;
+    margin: 2rem 0;
+    overflow: hidden;
 }
 
 .disclaimerButton {
@@ -113,9 +114,8 @@
 
 /* Exercises Section */
 .exercisesSection {
-    max-width: 80rem;
     margin: 0 auto;
-    padding: 3rem 1.5rem;
+    width: 100%;
 }
 
 .exercisesTitle {
@@ -129,6 +129,8 @@
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    width: 100%;
+
 }
 
 /* Exercise Card */
@@ -138,6 +140,8 @@
     border-radius: 0.5rem;
     overflow: hidden;
     transition: border-color 0.2s;
+    width: 100%;
+
 }
 
 .exerciseCard:hover {
@@ -158,6 +162,8 @@
 }
 
 .exerciseContent {
+    width: 100%;
+
     display: flex;
     align-items: flex-start;
     gap: 1rem;

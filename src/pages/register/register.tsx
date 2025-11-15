@@ -39,25 +39,34 @@ export default function Register() {
     <>
       <div className={styles.registerContainer}>
         {loading ? (
-          <h1 style={{color: 'white'}}>Registering your account ....</h1>
+          <h1 style={{ color: 'white' }}>Registering your account ....</h1>
         ) : (
           <div className={styles.col}>
             <img src={brandImage} className={styles.brandImage} />
             <h1>Create Your Account</h1>
             <form>
               <input
+                style={{
+                  color: 'black'
+                }}
                 type="text"
                 placeholder="Name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
               <input
+                style={{
+                  color: 'black'
+                }}
                 type="email"
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
               <input
+                style={{
+                  color: 'black'
+                }}
                 type="password"
                 placeholder="Password"
                 value={password}

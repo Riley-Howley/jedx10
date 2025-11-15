@@ -97,8 +97,8 @@ const AdminDashboard = () => {
                 </div>
                 <div>
                   <h3>Total Users</h3>
-                  <p className={styles.statNumber}>2,847</p>
-                  <span className={styles.statChange}>+12% from last month</span>
+                  <p className={styles.statNumber}>TBD</p>
+                  <span className={styles.statChange}>COMING SOON</span>
                 </div>
               </div>
               
@@ -112,8 +112,8 @@ const AdminDashboard = () => {
                 </div>
                 <div>
                   <h3>Active Sessions</h3>
-                  <p className={styles.statNumber}>1,234</p>
-                  <span className={styles.statChange}>+5% from yesterday</span>
+                  <p className={styles.statNumber}>TBD</p>
+                  <span className={styles.statChange}>COMING SOON</span>
                 </div>
               </div>
               
@@ -126,8 +126,8 @@ const AdminDashboard = () => {
                 </div>
                 <div>
                   <h3>Revenue</h3>
-                  <p className={styles.statNumber}>$24,892</p>
-                  <span className={styles.statChange}>+18% from last month</span>
+                  <p className={styles.statNumber}>TBD</p>
+                  <span className={styles.statChange}>COMING SOON</span>
                 </div>
               </div>
               
@@ -139,8 +139,8 @@ const AdminDashboard = () => {
                 </div>
                 <div>
                   <h3>Workouts Completed</h3>
-                  <p className={styles.statNumber}>5,672</p>
-                  <span className={styles.statChange}>+23% from last week</span>
+                  <p className={styles.statNumber}>TBD</p>
+                  <span className={styles.statChange}>COMING SOON</span>
                 </div>
               </div>
             </div>
@@ -163,7 +163,8 @@ const AdminDashboard = () => {
               
               <div className={styles.chartCard}>
                 <h3>Recent Activity</h3>
-                <div className={styles.activityList}>
+                <p>COMING SOON</p>
+                {/* <div className={styles.activityList}>
                   <div className={styles.activityItem}>
                     <div className={styles.activityDot}></div>
                     <span>New user registered - sarah@example.com</span>
@@ -184,7 +185,7 @@ const AdminDashboard = () => {
                     <span>Feedback submitted - 5 stars</span>
                     <span className={styles.activityTime}>18 min ago</span>
                   </div>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>

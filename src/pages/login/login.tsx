@@ -32,14 +32,20 @@ export default function Login() {
             <img src={brandImage} className={styles.brandImage} />
             <h1>Welcome Back</h1>
             <form>
-              {error && <p style={{color: 'red'}}>{error}</p>}
+              {error && <p style={{ color: 'red' }}>{error}</p>}
               <input
+                style={{
+                  color: 'black'
+                }}
                 type="email"
                 placeholder="Email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
               <input
+                style={{
+                  color: 'black'
+                }}
                 type="password"
                 placeholder="Password"
                 value={password}

@@ -10,7 +10,7 @@ interface UserDropdownProps {
   onLogout?: MouseEventHandler<HTMLButtonElement>;
 }
 
-const UserDropdown = ({ onSettings, onPreferences }: UserDropdownProps) => {
+const UserDropdown = ({}: UserDropdownProps) => {
   const { user } = useCurrentUser();
   
   const [isOpen, setIsOpen] = useState(false);
@@ -42,14 +42,14 @@ const UserDropdown = ({ onSettings, onPreferences }: UserDropdownProps) => {
     setIsOpen(!isOpen);
   };
 
-  const handleMenuClick = (callback?: MouseEventHandler<HTMLButtonElement>) => {
-    return (e: React.MouseEvent<HTMLButtonElement>) => {
-      setIsOpen(false);
-      if (callback) {
-        callback(e);
-      }
-    };
-  };
+  // const handleMenuClick = (callback?: MouseEventHandler<HTMLButtonElement>) => {
+  //   return (e: React.MouseEvent<HTMLButtonElement>) => {
+  //     setIsOpen(false);
+  //     if (callback) {
+  //       callback(e);
+  //     }
+  //   };
+  // };
 
   const handleLogout = async () => {
     const {
@@ -90,7 +90,8 @@ const UserDropdown = ({ onSettings, onPreferences }: UserDropdownProps) => {
 
       {isOpen && (
         <div className={styles.dropdown}>
-          <button
+          {/* TODO - Re enable future date */}
+          {/* <button
             className={styles.dropdownItem}
             onClick={handleMenuClick(onSettings)}
             type="button"
@@ -104,9 +105,9 @@ const UserDropdown = ({ onSettings, onPreferences }: UserDropdownProps) => {
             type="button"
           >
             Preferences
-          </button>
+          </button> */}
 
-          <div className={styles.divider}></div>
+          {/* <div className={styles.divider}></div> */}
 
           <button
             className={`${styles.dropdownItem} ${styles.logoutItem}`}

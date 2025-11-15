@@ -1,306 +1,262 @@
 import { useState, useEffect } from 'react';
 import styles from './userDashboard.module.css';
+import { Lock } from 'lucide-react';
+import { enrollUserInProgram, getAvailablePrograms, getUserEnrolledPrograms, type DBProgram } from '../admin/supabaseHelpers';
+import { useCurrentUser } from '../../../context/UserContext';
 
-interface WeekData {
-  id: number;
-  title: string;
-  description: string;
-  status: 'not-started' | 'locked' | 'in-progress' | 'completed';
-  isUnlocked: boolean;
-}
+const EnrolledPrograms = ({ userId }: { userId: string }) => {
+  const [userPrograms, setUserPrograms] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-interface Achievement {
-  id: string;
-  title: string;
-  description: string;
-  icon: string;
-  isUnlocked: boolean;
-  progress?: number;
-  target?: number;
-}
-
-interface UserStats {
-  workoutsCompleted: number;
-  minutesWatched: number;
-  workoutsRated: number;
-  currentStreak: number;
-  longestStreak: number;
-  totalWorkouts: number;
-}
-
-const UserDashboard = () => {
-  // Mock user stats - in real app, this would come from API/database
-  const [userStats] = useState<UserStats>({
-    workoutsCompleted: 12,
-    minutesWatched: 180,
-    workoutsRated: 3,
-    currentStreak: 2,
-    longestStreak: 5,
-    totalWorkouts: 12
-  });
-
-  const [weeks] = useState<WeekData[]>([
-    {
-      id: 1,
-      title: 'Week 1: Foundation & Core',
-      description: 'Build your base fitness and core stability.',
-      status: 'not-started',
-      isUnlocked: true
-    },
-    {
-      id: 2,
-      title: 'Week 2: Strength Building',
-      description: 'Increase muscular strength and definition.',
-      status: 'locked',
-      isUnlocked: false
-    },
-    {
-      id: 3,
-      title: 'Week 3: Endurance Boost',
-      description: 'Improve cardiovascular health and stamina.',
-      status: 'locked',
-      isUnlocked: false
-    },
-    {
-      id: 4,
-      title: 'Week 4: Power & Agility',
-      description: 'Develop explosive power and quickness.',
-      status: 'locked',
-      isUnlocked: false
-    },
-    {
-      id: 5,
-      title: 'Week 5: Peak Performance',
-      description: 'Challenge your limits and reach new heights.',
-      status: 'locked',
-      isUnlocked: false
-    },
-    {
-      id: 6,
-      title: 'Week 6: Maintenance & Flow',
-      description: 'Sustain your fitness and focus on recovery.',
-      status: 'locked',
-      isUnlocked: false
-    }
-  ]);
-
-  const [achievements, setAchievements] = useState<Achievement[]>([
-    {
-      id: 'dedication',
-      title: 'Dedication',
-      description: 'Watch 300 minutes of workouts',
-      icon: '⭐',
-      isUnlocked: false,
-      progress: userStats.minutesWatched,
-      target: 300
-    },
-    {
-      id: 'first-steps',
-      title: 'First Steps',
-      description: 'Complete your first workout',
-      icon: '🎯',
-      isUnlocked: userStats.workoutsCompleted >= 1
-    },
-    {
-      id: 'fitness-fanatic',
-      title: 'Fitness Fanatic',
-      description: 'Complete 50 workouts',
-      icon: '🏆',
-      isUnlocked: false,
-      progress: userStats.workoutsCompleted,
-      target: 50
-    },
-    {
-      id: 'hour-power',
-      title: 'Hour Power',
-      description: 'Watch 60 minutes of workouts',
-      icon: '⏱️',
-      isUnlocked: userStats.minutesWatched >= 60,
-      progress: userStats.minutesWatched,
-      target: 60
-    },
-    {
-      id: 'reviewer',
-      title: 'Reviewer',
-      description: 'Rate 5 workouts',
-      icon: '⭐',
-      isUnlocked: false,
-      progress: userStats.workoutsRated,
-      target: 5
-    },
-    {
-      id: 'streak-master',
-      title: 'Streak Master',
-      description: 'Maintain a 7-day workout streak',
-      icon: '🔥',
-      isUnlocked: false,
-      progress: userStats.longestStreak,
-      target: 7
-    },
-    {
-      id: 'streak-starter',
-      title: 'Streak Starter',
-      description: 'Maintain a 3-day workout streak',
-      icon: '🔥',
-      isUnlocked: userStats.longestStreak >= 3,
-      progress: userStats.longestStreak,
-      target: 3
-    },
-    {
-      id: 'workout-warrior',
-      title: 'Workout Warrior',
-      description: 'Complete 10 workouts',
-      icon: '💪',
-      isUnlocked: userStats.workoutsCompleted >= 10,
-      progress: userStats.workoutsCompleted,
-      target: 10
-    }
-  ]);
-
-  // Check achievements on component mount and stats change
   useEffect(() => {
-    setAchievements(prevAchievements =>
-      prevAchievements.map(achievement => {
-        const updatedAchievement = { ...achievement };
-        
-        switch (achievement.id) {
-          case 'dedication':
-            updatedAchievement.isUnlocked = userStats.minutesWatched >= 300;
-            updatedAchievement.progress = userStats.minutesWatched;
-            break;
-          case 'first-steps':
-            updatedAchievement.isUnlocked = userStats.workoutsCompleted >= 1;
-            break;
-          case 'fitness-fanatic':
-            updatedAchievement.isUnlocked = userStats.workoutsCompleted >= 50;
-            updatedAchievement.progress = userStats.workoutsCompleted;
-            break;
-          case 'hour-power':
-            updatedAchievement.isUnlocked = userStats.minutesWatched >= 60;
-            updatedAchievement.progress = userStats.minutesWatched;
-            break;
-          case 'reviewer':
-            updatedAchievement.isUnlocked = userStats.workoutsRated >= 5;
-            updatedAchievement.progress = userStats.workoutsRated;
-            break;
-          case 'streak-master':
-            updatedAchievement.isUnlocked = userStats.longestStreak >= 7;
-            updatedAchievement.progress = userStats.longestStreak;
-            break;
-          case 'streak-starter':
-            updatedAchievement.isUnlocked = userStats.longestStreak >= 3;
-            updatedAchievement.progress = userStats.longestStreak;
-            break;
-          case 'workout-warrior':
-            updatedAchievement.isUnlocked = userStats.workoutsCompleted >= 10;
-            updatedAchievement.progress = userStats.workoutsCompleted;
-            break;
-        }
-        
-        return updatedAchievement;
-      })
-    );
-  }, [userStats]);
+    const fetchUserPrograms = async () => {
+      if (!userId) return;
 
-  const handleWeekClick = (week: WeekData) => {
-    if (!week.isUnlocked) {
-      return;
-    }
-    
-    console.log(`Starting ${week.title}`);
-    // Navigate to week details or start workout
-  };
+      try {
+        setLoading(true);
+        const programs = await getUserEnrolledPrograms(userId);
+        setUserPrograms(programs);
+      } catch (err) {
+        console.error("Error fetching user programs:", err);
+        setError("Failed to load your programs");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const getStatusText = (status: string, isUnlocked: boolean) => {
-    if (!isUnlocked) return 'Locked';
-    
-    switch (status) {
-      case 'not-started': return 'Not Started';
-      case 'in-progress': return 'In Progress';
-      case 'completed': return 'Completed';
-      default: return 'Locked';
-    }
-  };
+    fetchUserPrograms();
+  }, [userId]);
 
-  const getStatusClass = (status: string, isUnlocked: boolean) => {
-    if (!isUnlocked) return styles.statusLocked;
-    
-    switch (status) {
-      case 'not-started': return styles.statusNotStarted;
-      case 'in-progress': return styles.statusInProgress;
-      case 'completed': return styles.statusCompleted;
-      default: return styles.statusLocked;
+
+  if (loading) return <h1>Loading...</h1>;
+  if (error) return <h1>{error}</h1>;
+
+  const determineProgress = (percentage: number) => {
+    if (percentage === 0) {
+      return 'BEGIN'
+    } else if (percentage > 0 && percentage < 100){
+      return 'RESUME'
+    } else {
+      return 'COMPLETE'
     }
-  };
+  }
 
   return (
-    <div style={{backgroundColor: '#1A1F2E'}} className={styles.dashboard}>
-      <div className={styles.leftSection}>
-        <h1 className={styles.sectionTitle}>Your Program</h1>
-        
-        <div className={styles.weeksList}>
-          {weeks.map((week) => (
-            <div 
-              key={week.id}
-              className={`${styles.weekCard} ${!week.isUnlocked ? styles.weekCardLocked : ''}`}
-              onClick={() => handleWeekClick(week)}
-            >
-              <div className={styles.weekContent}>
-                <div className={styles.weekHeader}>
-                  <h3 className={styles.weekTitle}>
-                    {week.title}
-                    <span className={styles.lockIcon}>
-                      {!week.isUnlocked && '🔒'}
-                    </span>
-                  </h3>
-                  <span className={getStatusClass(week.status, week.isUnlocked)}>
-                    {getStatusText(week.status, week.isUnlocked)}
-                  </span>
-                </div>
-                <p className={styles.weekDescription}>{week.description}</p>
+    <div>
+      {userPrograms.map((program) => (
+        <div className={styles.enrollProgram}>
+          <div className={styles.enrollProgramRow}>
+            <div>
+              <h1>{program.programs.title}</h1>
+              <p style={{
+                color: '#52525b',
+              }}>ELITE TRAINING SYSTEM</p>
+            </div>
+            <div>
+              <p style={{
+                textAlign: 'right',
+                fontSize: 30,
+              }}>{program.progress_percentage}%</p>
+              <p style={{
+                color: '#52525b',
+                fontSize: 12,
+              }}>{determineProgress(program.progress_percentage)}</p>
+            </div>
+          </div>
+          {/* Progress bar */}
+          <div className={styles.progressBarContainer}>
+            <div
+              className={styles.progressBarFill}
+              // TODO - Add progress to enrollment
+              // style={{ width: `${enrolledPrograms[0].progress || 10}%` }}
+              style={{ width: `${program.progress_percentage}%` }} 
+
+            />
+          </div>
+          <div>
+            {/* Show the next course */}
+            <div className={styles.enrollProgramNextCourse}>
+              <div>
+                <h4>NEXT WORKOUT</h4>
+                <p style={{
+                  color: '#52525b',
+                }}>Core Stability Flow</p>
+              </div>
+              {/* TODO - Start for 0, Resume for > 0 < 100, Completed for 100 */}
+              {/* handleLoadProgram(program.programs.id) */}
+              <button onClick={() => {
+                console.log('program', program)
+                window.location.href = `/dashboard/program/${program.id}`
+              }} className={styles.startButton}>
+                START
+              </button>
+            </div>
+          </div>
+        </div>
+      ))}
+      {/* TODO - Better empty states */}
+      {userPrograms.length === 0 && <h1>Enroll in a program lazy shit</h1>}
+    </div>
+  );
+};
+
+const AvailablePrograms = ({ userId }: { userId: string }) => {
+  const [programs, setPrograms] = useState<DBProgram[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [enrolling, setEnrolling] = useState<string | null>(null); // Track which program is being enrolled
+
+  useEffect(() => {
+    const fetchPrograms = async () => {
+      try {
+        setLoading(true);
+        const programs = await getAvailablePrograms(userId);
+        setPrograms(programs);
+      } catch (err) {
+        console.error("Error fetching programs:", err)
+        setError("Failed to load programs")
+      } finally {
+        setLoading(false)
+      }
+
+    }
+    fetchPrograms();
+  }, [])
+
+  const handleEnroll = async (programId: string) => {
+    try {
+      setEnrolling(programId);
+
+      await enrollUserInProgram(userId, programId)
+
+      setPrograms(programs.filter(p => p.id !== programId));
+
+    } catch (err) {
+      console.error("Error enrolling in program:", err);
+      setError("Failed to enroll in program");
+    } finally {
+      setEnrolling(null);
+    }
+  };
+
+  if (loading) return <h1>Loading...</h1>;
+  if (error) return <h1>{error}</h1>;
+
+  console.log('programs to enrol', programs)
+
+  return (
+    <div>
+      <div className={styles.availableHeader}>
+        <h1 className={styles.availableTitle}>Discover Programs</h1>
+        <p className={styles.availableDescription}>Find your next fitness challenge</p>
+      </div>
+      {programs.map((prog) => (
+        <div key={prog.id} className={styles.programContainer}>
+          <div className={styles.programContent}>
+            <h1 className={styles.programTitle}>{prog.title}</h1>
+            <p className={styles.programDescription}>{prog.description || "ADVANCED PERFORMANCE"}</p>
+            <div className={styles.programDetailsContainer}>
+              <div className={styles.programDetailItems}>
+                <h4>DURATION</h4>
+                <h4>DIFFICULTY</h4>
+                <h4>FOCUS</h4>
+              </div>
+              <div className={styles.programDetailValues}>
+                {/* TODO - add .uppercase to these but they maybe not exist */}
+                <h4>{prog.duration || "TBD"}</h4>
+                <h4>{prog.difficulty|| "TBD"}</h4>
+                <h4>{prog.focus || "TBD"}</h4>
               </div>
             </div>
-          ))}
+          </div>
+          <div className={styles.programFooter}>
+            <hr className={styles.line} />
+            <button
+              className={styles.enrollButton}
+              onClick={() => handleEnroll(prog.id)}
+              disabled={enrolling === prog.id || !prog.is_active}
+            >
+              <div style={{
+                display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '10px'
+              }}>
+                {!prog.is_active && <Lock />}
+                {enrolling === prog.id ? 'ENROLLING...' : 'ENROLL NOW'}
+              </div>
+            </button>
+          </div>
+        </div>
+      ))}
+      {programs.length === 0 && <h1>No more programs</h1>}
+    </div>);
+};
+
+const UserDashboard = () => {
+  const tabs = ['enrolled', 'available'];
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+
+  const { user, loading } = useCurrentUser();
+
+  if (loading) {
+    return (
+      <div style={{ backgroundColor: '#121214' }} className={styles.dashboard}>
+        <div className={styles.tabContent}>
+          <h1>Loading...</h1>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return (
+      <div style={{ backgroundColor: '#121214' }} className={styles.dashboard}>
+        <div className={styles.tabContent}>
+          <h1>Please log in</h1>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div style={{ backgroundColor: '#121214' }} className={styles.dashboard}>
+      <div className={styles.header}>
+        <div className={styles.headerContent}>
+          <div className={styles.headerLeft}>
+            <h1 className={styles.headerTitle}>FITNESS</h1>
+            <div className={styles.headerSubtitle}>
+              <hr className={styles.headerLine} />
+              <h4 className={styles.headerText}>YOUR TRAINING HUB</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* Tab Navigation */}
+      <div className={styles.tabNavigation}>
+        <div className={styles.tabContainer}>
+          <button
+            onClick={() => setActiveTab('enrolled')}
+            className={`${styles.tab} ${activeTab === 'enrolled' ? styles.tabActive : ''}`}
+          >
+            Enrolled Programs
+            {activeTab === 'enrolled' && <div className={styles.tabIndicator} />}
+          </button>
+          <button
+            onClick={() => setActiveTab('available')}
+            className={`${styles.tab} ${activeTab === 'available' ? styles.tabActive : ''}`}
+          >
+            Available Programs
+            {activeTab === 'available' && <div className={styles.tabIndicator} />}
+          </button>
         </div>
       </div>
 
-      <div className={styles.rightSection}>
-        <h2 className={styles.sectionTitle}>Achievements</h2>
-        <p className={styles.sectionSubtitle}>Upcoming</p>
-        
-        <div className={styles.achievementsList}>
-          {achievements.map((achievement) => (
-            <div 
-              key={achievement.id}
-              className={`${styles.achievementCard} ${achievement.isUnlocked ? styles.achievementUnlocked : ''}`}
-            >
-              <div className={styles.achievementIcon}>
-                {achievement.icon}
-              </div>
-              <div className={styles.achievementContent}>
-                <h4 className={styles.achievementTitle}>{achievement.title}</h4>
-                <p className={styles.achievementDescription}>
-                  {achievement.description}
-                  {achievement.progress !== undefined && achievement.target && (
-                    <span className={styles.progressText}>
-                      {' '}({achievement.progress}/{achievement.target})
-                    </span>
-                  )}
-                </p>
-                {achievement.progress !== undefined && achievement.target && (
-                  <div className={styles.progressBar}>
-                    <div 
-                      className={styles.progressFill}
-                      style={{ 
-                        width: `${Math.min((achievement.progress / achievement.target) * 100, 100)}%` 
-                      }}
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
+      {/* Tab Content */}
+      <div className={styles.tabContent}>
+        {activeTab === 'enrolled' ? (
+          <EnrolledPrograms userId={user.id} />
+        ) : (
+          <AvailablePrograms userId={user.id} />
+        )}
       </div>
     </div>
   );

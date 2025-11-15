@@ -24,8 +24,12 @@ export interface Course {
 export interface Program {
   id?: string;
   title: string;
-  courses?: Course[];
   description?: string;
+  duration: string;
+  difficulty: string;
+  focus: string;
+  cost: string;
+  courses?: Course[];
   image_url?: string;
   is_active?: boolean;
 }
@@ -35,6 +39,10 @@ export interface DBProgram {
   id: string;
   title: string;
   description?: string;
+  duration: string;
+  difficulty: string;
+  focus: string;
+  cost: string;
   image_url?: string;
   is_active: boolean;
   created_at: string;
@@ -72,14 +80,14 @@ export interface DBVideo {
 // Helper function to convert duration string to seconds
 function durationToSeconds(duration: string): number | null {
   if (!duration) return null;
-  
+
   const parts = duration.split(':');
   if (parts.length === 2) {
     const minutes = parseInt(parts[0], 10);
     const seconds = parseInt(parts[1], 10);
     return (minutes * 60) + seconds;
   }
-  
+
   // If it's just seconds
   const totalSeconds = parseInt(duration, 10);
   return isNaN(totalSeconds) ? null : totalSeconds;
@@ -88,13 +96,13 @@ function durationToSeconds(duration: string): number | null {
 // Helper function to convert seconds to duration string
 function secondsToDuration(seconds: number | undefined): string {
   if (!seconds) return '';
-  
+
   const minutes = Math.floor(seconds / 60);
   const remainingSeconds = seconds % 60;
   return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 }
 
-// Upload video file to Supabase Storage
+// Up video file to Supabase Storage
 export async function uploadVideo(file: File, videoId: string): Promise<string | null> {
   try {
     const fileExt = file.name.split('.').pop();
@@ -135,6 +143,10 @@ export async function saveProgram(program: Program): Promise<{ success: boolean;
         id: program.id,
         title: program.title,
         description: program.description,
+        duration: program.duration,
+        difficulty: program.difficulty,
+        focus: program.focus,
+        cost: program.cost,
         image_url: program.image_url,
         is_active: true
       }, {
@@ -153,7 +165,7 @@ export async function saveProgram(program: Program): Promise<{ success: boolean;
     // Save courses
     for (let courseIndex = 0; courseIndex < program.courses!.length; courseIndex++) {
       const course = program.courses![courseIndex];
-      
+
       const { data: courseData, error: courseError } = await supabaseAdmin
         .from('courses')
         .upsert({
@@ -180,7 +192,7 @@ export async function saveProgram(program: Program): Promise<{ success: boolean;
       // Save videos for this course
       for (let videoIndex = 0; videoIndex < course.videos.length; videoIndex++) {
         const video = course.videos[videoIndex];
-        
+
         let videoUrl = video.videoUrl;
 
         if (!videoUrl) {
@@ -291,6 +303,10 @@ export async function loadProgram(programId: string): Promise<Program | null> {
       id: programData.id,
       title: programData.title,
       description: programData.description,
+      duration: programData.duration,
+      difficulty: programData.difficulty,
+      focus: programData.focus,
+      cost: programData.cost,
       image_url: programData.image_url,
       courses
     };
@@ -358,33 +374,32 @@ export async function deleteVideo(videoId: string): Promise<boolean> {
 
 // Enroll user in program
 export async function enrollUserInProgram(
-  userId: string, 
-  programId: string, 
-  cost?: number, 
+  userId: string,
+  programId: string,
+  cost?: number,
   paymentStatus: string = 'free'
-): Promise<boolean> {
+): Promise<string | null> {
   try {
-    const { error } = await supabaseAdmin
-      .from('program_enrollments')
-      .insert({
-        user_id: userId,
-        program_id: programId,
-        cost,
-        payment_status: paymentStatus,
-        is_active: true
-      });
+    const { data, error } = await supabaseAdmin.rpc('enroll_user_in_program_fn', {
+      p_user_id: userId,
+      p_program_id: programId,
+      p_cost: cost ?? 0,
+      p_payment_status: paymentStatus
+    });
 
     if (error) {
       console.error('Error enrolling user:', error);
-      return false;
+      return null;
     }
 
-    return true;
+    return data; // enrollment_id
   } catch (error) {
-    console.error('Error in enrollUserInProgram:', error);
-    return false;
+    console.error('Unexpected error in enrollUserInProgram:', error);
+    return null;
   }
 }
+
+
 
 // Get user's enrolled programs
 export async function getUserEnrolledPrograms(userId: string): Promise<any[]> {
@@ -401,7 +416,6 @@ export async function getUserEnrolledPrograms(userId: string): Promise<any[]> {
         )
       `)
       .eq('user_id', userId)
-      .eq('is_active', true);
 
     if (error) {
       console.error('Error loading user programs:', error);
@@ -480,3 +494,119 @@ export async function updateVideoProgress(
     return false;
   }
 }
+
+export async function getAvailablePrograms(userId: string): Promise<any[]> {
+  try {
+    // First, get the program IDs the user is enrolled in
+    const { data: enrolledPrograms, error: enrolledError } = await supabaseAdmin
+      .from('program_enrollments')
+      .select('program_id')
+      .eq('user_id', userId);
+
+    if (enrolledError) {
+      console.error('Error loading enrolled programs:', enrolledError);
+      return [];
+    }
+
+    const enrolledProgramIds = enrolledPrograms?.map(e => e.program_id) || [];
+
+    // Then get all programs NOT in that list
+    const { data, error } = await supabaseAdmin
+      .from('programs')
+      .select('*')
+      .not('id', 'in', `(${enrolledProgramIds.join(',')})`)
+
+    if (error) {
+      console.error('Error loading available programs:', error);
+      return [];
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error('Error in getAvailablePrograms:', error);
+    return [];
+  }
+}
+
+export async function loadProgramCoursesWithLockState(
+  userId: string,
+  programEnrollmentId: string
+): Promise<any[]> {
+  try {
+    const { data, error } = await supabaseAdmin
+      .from('user_course_progress')
+      .select(`
+        id,
+        pos,
+        progress_percentage,
+        course:course_id (
+          id,
+          title,
+          description,
+          order_index,
+          is_active
+        )
+      `)
+      .eq('user_id', userId)
+      .eq('program_enrollment_id', programEnrollmentId)
+      .order('pos');
+
+    if (error) {
+      console.error('Error loading program courses:', error);
+      return [];
+    }
+
+    if (!data || data.length === 0) return [];
+
+    // Apply locking logic
+    const coursesWithLock = data.map((course, index, arr) => {
+      if (index === 0) {
+        // first course is always unlocked
+        return { ...course, locked: false };
+      }
+
+      const prevCourse = arr[index - 1];
+      const prevCompleted = (prevCourse.progress_percentage ?? 0) === 100;
+
+      return { ...course, locked: !prevCompleted };
+    });
+
+    return coursesWithLock;
+  } catch (err) {
+    console.error('Unexpected error in loadProgramCoursesWithLockState:', err);
+    return [];
+  }
+}
+
+export async function loadCourseWithVideos(
+  courseId: string
+): Promise<any[]> {
+  const { data, error } = await supabaseAdmin
+    .from("courses")
+    .select(`
+      *,
+      videos(*)
+    `)
+    .eq("id", courseId);
+
+  if (error) throw error;
+  return data;
+}
+
+export async function updateCourseProgress(courseId: string, userId: string): Promise<any>{
+  const { error, data } = await supabaseAdmin
+      .from('user_course_progress')
+      .update({ 
+        is_completed: true,
+        progress_percentage: 100,
+        completion_date: new Date().toISOString()
+      })
+      .eq('course_id', courseId)
+      .eq('user_id', userId)
+      .select("program_enrollment_id")
+
+  if (error) return false
+  return data;
+}
+
+

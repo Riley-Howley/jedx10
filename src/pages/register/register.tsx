@@ -64,7 +64,6 @@ export default function Register() {
                 onChange={(e) => setPassword(e.target.value)}
               />
               <Button text="Register" primary onButtonClick={() => {
-                console.log("Register")
                 handleRegister()
               }} />
             </form>

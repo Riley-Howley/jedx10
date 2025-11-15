@@ -14,7 +14,7 @@ const ProgramStructure = ({courses}: ProgramStructureProps) => {
             key={course.id}
             className={`${styles.phaseItem} ${course.locked ? styles.locked : styles.active} ${index === 0 ? styles.first : ''}`}
             onClick={() => {
-              window.location.href = `/dashboard/course/${course.course.id}`
+              if (!course.locked) window.location.href = `/dashboard/course/${course.course.id}`
             }}
           >
             <div className={styles.courseLeft}>

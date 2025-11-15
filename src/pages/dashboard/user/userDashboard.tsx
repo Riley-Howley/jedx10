@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import styles from './userDashboard.module.css';
 import { Lock } from 'lucide-react';
-import { enrollUserInProgram, getAvailablePrograms, getUserEnrolledPrograms, loadProgram, type DBProgram } from '../admin/supabaseHelpers';
+import { enrollUserInProgram, getAvailablePrograms, getUserEnrolledPrograms, type DBProgram } from '../admin/supabaseHelpers';
 import { useCurrentUser } from '../../../context/UserContext';
 
 const EnrolledPrograms = ({ userId }: { userId: string }) => {
@@ -32,13 +32,14 @@ const EnrolledPrograms = ({ userId }: { userId: string }) => {
   if (loading) return <h1>Loading...</h1>;
   if (error) return <h1>{error}</h1>;
 
-  const handleLoadProgram = (programId: string) => {
-
-    console.log("ProgramId", programId);
-
-    const data = loadProgram(programId);
-
-    console.log("Data", data)
+  const determineProgress = (percentage: number) => {
+    if (percentage === 0) {
+      return 'BEGIN'
+    } else if (percentage > 0 && percentage < 100){
+      return 'RESUME'
+    } else {
+      return 'COMPLETE'
+    }
   }
 
   return (
@@ -56,11 +57,11 @@ const EnrolledPrograms = ({ userId }: { userId: string }) => {
               <p style={{
                 textAlign: 'right',
                 fontSize: 30,
-              }}>16%</p>
+              }}>{program.progress_percentage}%</p>
               <p style={{
                 color: '#52525b',
                 fontSize: 12,
-              }}>COMPLETE</p>
+              }}>{determineProgress(program.progress_percentage)}</p>
             </div>
           </div>
           {/* Progress bar */}
@@ -69,7 +70,7 @@ const EnrolledPrograms = ({ userId }: { userId: string }) => {
               className={styles.progressBarFill}
               // TODO - Add progress to enrollment
               // style={{ width: `${enrolledPrograms[0].progress || 10}%` }}
-              style={{ width: `${50}%` }} 
+              style={{ width: `${program.progress_percentage}%` }} 
 
             />
           </div>
@@ -85,7 +86,8 @@ const EnrolledPrograms = ({ userId }: { userId: string }) => {
               {/* TODO - Start for 0, Resume for > 0 < 100, Completed for 100 */}
               {/* handleLoadProgram(program.programs.id) */}
               <button onClick={() => {
-                window.location.href = `/dashboard/program/${program.program_id}`
+                console.log('program', program)
+                window.location.href = `/dashboard/program/${program.id}`
               }} className={styles.startButton}>
                 START
               </button>
@@ -141,6 +143,8 @@ const AvailablePrograms = ({ userId }: { userId: string }) => {
   if (loading) return <h1>Loading...</h1>;
   if (error) return <h1>{error}</h1>;
 
+  console.log('programs to enrol', programs)
+
   return (
     <div>
       <div className={styles.availableHeader}>
@@ -159,9 +163,10 @@ const AvailablePrograms = ({ userId }: { userId: string }) => {
                 <h4>FOCUS</h4>
               </div>
               <div className={styles.programDetailValues}>
-                <h4>{prog.duration.toUpperCase()}</h4>
-                <h4>{prog.difficulty.toUpperCase()}</h4>
-                <h4>{prog.focus.toUpperCase()}</h4>
+                {/* TODO - add .uppercase to these but they maybe not exist */}
+                <h4>{prog.duration || "TBD"}</h4>
+                <h4>{prog.difficulty|| "TBD"}</h4>
+                <h4>{prog.focus || "TBD"}</h4>
               </div>
             </div>
           </div>

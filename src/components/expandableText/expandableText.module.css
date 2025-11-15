@@ -1,0 +1,30 @@
+.expandBtn {
+    background: none;
+    border: none;
+    color: #EBB305;
+    font-size: 14px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 0;
+  }
+  
+  .expandBtn:hover {
+    color: #F8CB41;
+  }
+  
+  .chevron {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+    transition: transform 0.2s ease;
+  }
+  
+  .rotate {
+    transform: rotate(-135deg);
+  }
+  

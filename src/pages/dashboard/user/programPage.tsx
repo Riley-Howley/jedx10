@@ -1,18 +1,23 @@
 import { useParams } from "react-router-dom";
 import styles from './programPage.module.css';
-import { loadProgram } from "../admin/supabaseHelpers";
 import { useEffect, useState } from "react";
 import ProgramStructure from "./programStructure";
+import { loadProgramCoursesWithLockState } from "../admin/supabaseHelpers";
+import { useCurrentUser } from "../../../context/UserContext";
 
 const ProgramPage = () => {
     const { programId } = useParams();
 
     const [program, setProgram] = useState(null);
 
+    const { user } = useCurrentUser();
+
+
     const handleLoadProgram = async (programId: string) => {
 
-        const data = await loadProgram(programId);
-        if (data) setProgram(data)
+        if (!user) return;
+        const data = await loadProgramCoursesWithLockState(user.id,programId);
+        if (data) setProgram(data as any)
         console.log(data)
       }
 
@@ -33,7 +38,7 @@ const ProgramPage = () => {
                     </div>
                 </div>
             </div>
-            {program && <ProgramStructure courses={program.courses}/>}
+            {program && <ProgramStructure courses={program}/>}
         </div>
     );
 };

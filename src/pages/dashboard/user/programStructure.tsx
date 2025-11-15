@@ -1,40 +1,28 @@
-import type { Course } from '../admin/supabaseHelpers';
 import styles from './programStructure.module.css';
 
-interface ProgramPhase {
-  id: number;
-  title: string;
-  description: string;
-  locked: boolean;
-}
-
 interface ProgramStructureProps {
-    courses: Course[],
+    courses: any,
 }
 
 const ProgramStructure = ({courses}: ProgramStructureProps) => {
-  const handlePhaseClick = (phase: ProgramPhase) => {
-    if (!phase.locked) {
-      console.log('Clicked phase:', phase.title);
-      // Add your navigation or action here
-    }
-  };
 
   return (
     <div className={styles.programStructure}>
       <div className={styles.phasesContainer}>
-        {courses.map((course, index) => (
+        {courses.map((course: any, index: number) => (
           <div
             key={course.id}
             className={`${styles.phaseItem} ${course.locked ? styles.locked : styles.active} ${index === 0 ? styles.first : ''}`}
+            onClick={() => {
+              window.location.href = `/dashboard/course/${course.course.id}`
+            }}
           >
             <div className={styles.courseLeft}>
               <div className={styles.courseNumber}>{String(index+=1).padStart(2, '0')}</div>
             </div>
             <div className={styles.courseRight}>
               <div className={styles.courseContent}>
-                <h3 className={styles.courseTitle}>{course.title}</h3>
-                <p className={styles.courseDescription}>{course.description}</p>
+                <h3 className={styles.courseTitle}>{course.course.title}</h3>
               </div>
               {course.locked && (
                 <div className={styles.lockIcon}>

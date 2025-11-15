@@ -24,7 +24,6 @@ const CourseStructure = ({ course,userId }: CourseStructureProps) => {
     const toggleVideo = (exerciseId: string) => {
         setExpandedVideo(expandedVideo === exerciseId ? null : exerciseId);
     };
-    console.log("Course", course)
 
     function getYouTubeEmbedUrl(url: string) {
         // youtu.be short link

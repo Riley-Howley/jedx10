@@ -392,7 +392,6 @@ export async function enrollUserInProgram(
       return null;
     }
 
-    console.log('Enrollment complete ✅', { enrollmentId: data });
     return data; // enrollment_id
   } catch (error) {
     console.error('Unexpected error in enrollUserInProgram:', error);
@@ -422,8 +421,6 @@ export async function getUserEnrolledPrograms(userId: string): Promise<any[]> {
       console.error('Error loading user programs:', error);
       return [];
     }
-
-    console.log("data", data)
 
     return data || [];
   } catch (error) {
@@ -612,7 +609,4 @@ export async function updateCourseProgress(courseId: string, userId: string): Pr
   return data;
 }
 
-
-// user_course_progress unlock next, set complete
-// program_enrollments  progress all courses / completed
 

@@ -18,7 +18,6 @@ const ProgramPage = () => {
         if (!user) return;
         const data = await loadProgramCoursesWithLockState(user.id,programId);
         if (data) setProgram(data as any)
-        console.log(data)
       }
 
       useEffect(() => {

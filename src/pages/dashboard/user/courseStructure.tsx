@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styles from "./courseStructure.module.css";
 import { updateCourseProgress } from "../admin/supabaseHelpers";
+import { ExpandableText } from "../../../components/expandableText/expandableText";
 
 interface CourseStructureProps {
     course: {
@@ -91,6 +92,9 @@ const CourseStructure = ({ course,userId }: CourseStructureProps) => {
                         )}
                     </div>
                 )}
+            {course.description && (
+                <ExpandableText text={course.description} />
+            )}
 
             {/* Disclaimer Banner */}
             {course.disclaimer && (

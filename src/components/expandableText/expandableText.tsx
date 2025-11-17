@@ -12,7 +12,7 @@ export default function ExpandToggle({ expanded, onToggle }: any) {
   );
 }
 
-export function ExpandableText({ text, maxChars = 120 }: any) {
+export function ExpandableText({ text, maxChars = 340 }: any) {
   const [expanded, setExpanded] = useState(false);
 
   if (!text) return null;

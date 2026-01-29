@@ -8,12 +8,42 @@ import Dashboard from './pages/dashboard/dashboard';
 import AdminDashboard from './pages/dashboard/admin/adminDashboard';
 import UserDashboard from './pages/dashboard/user/userDashboard';
 import { useCurrentUser } from './context/UserContext';
-import type { JSX } from 'react';
+import { useEffect, type JSX } from 'react';
 import ProgramPage from './pages/dashboard/user/programPage';
 import CoursePage from './pages/dashboard/user/coursePage';
+import { supabase } from './lib/superbase';
+
+function useLastSeen() {
+  useEffect(() => {
+    const upsertLastSeen = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      const user = session?.user;
+      if (!user) return;
+
+      await supabase
+        .from("profiles")
+        .update({ last_seen_at: new Date().toISOString() })
+        .eq("id", user.id);
+    };
+
+    // run on load
+    upsertLastSeen();
+
+    // run when auth state changes (login/logout/refresh)
+    const { data: sub } = supabase.auth.onAuthStateChange((_event) => {
+      upsertLastSeen();
+    });
+
+    return () => {
+      sub.subscription.unsubscribe();
+    };
+  }, []);
+}
 
 function PrivateRoute({ element }: { element: JSX.Element }) {
   const { user, loading } = useCurrentUser(); 
+  useLastSeen();
+
 
   if (loading) return <div>Loading...</div>;
   return user ? element : <Navigate to="/login" />;

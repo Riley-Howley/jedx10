@@ -1,6 +1,9 @@
 import { useState, type JSX } from 'react';
 import styles from './adminDashboard.module.css';
 import CourseManagement from './tabs/courseManagement';
+import { TotalUsers } from './stats/TotalUsers';
+import { TotalActiveSessions } from './stats/TotalActiveMembers';
+import UserManagement from './tabs/userManagement';
 
 type TabType = 'dashboard' | 'users' | 'content' | 'feedback' | 'workouts';
 
@@ -97,8 +100,7 @@ const AdminDashboard = () => {
                 </div>
                 <div>
                   <h3>Total Users</h3>
-                  <p className={styles.statNumber}>TBD</p>
-                  <span className={styles.statChange}>COMING SOON</span>
+                  <TotalUsers />
                 </div>
               </div>
               
@@ -112,8 +114,7 @@ const AdminDashboard = () => {
                 </div>
                 <div>
                   <h3>Active Sessions</h3>
-                  <p className={styles.statNumber}>TBD</p>
-                  <span className={styles.statChange}>COMING SOON</span>
+                  <TotalActiveSessions />
                 </div>
               </div>
               
@@ -193,26 +194,17 @@ const AdminDashboard = () => {
       
       case 'users':
         return (
-          <div className={styles.contentSection}>
+          <div>
             <h1>Users & Subscriptions</h1>
             <p className={styles.sectionDescription}>Manage user accounts and subscription plans</p>
-            <div className={styles.placeholder}>
-              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1">
-                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
-                <circle cx="9" cy="7" r="4"></circle>
-                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-              </svg>
-              <p>User management interface coming soon...</p>
-            </div>
+              <UserManagement />
           </div>
         );
       
       case 'content':
         return (
-          <div className={styles.contentSection}>
+          <div>
             <h1 style={{
-              backgroundColor: "white",
             }}>Content Management</h1>
             <p className={styles.sectionDescription}>Create and manage workout content, articles, and media</p>
             <CourseManagement />

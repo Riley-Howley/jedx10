@@ -75,6 +75,9 @@ export default function Register() {
               <Button text="Register" primary onButtonClick={() => {
                 handleRegister()
               }} />
+              <div onClick={() => window.location.href = "/login"} className={styles.login}>
+                <p>Already have an account? Login here</p>
+              </div>
             </form>
           </div>
         )}

@@ -54,6 +54,9 @@ export default function Login() {
               <Button text="login" primary onButtonClick={() => {
                 handleLogin();
               }} />
+              <div onClick={() => window.location.href = "/register"}>
+                <p className={styles.register}>No account? Register here</p>
+              </div>
             </form>
           </div>
         )}

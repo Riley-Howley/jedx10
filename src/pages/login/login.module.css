@@ -65,6 +65,15 @@
   .col input:last-child {
     margin-bottom: 1.5rem;
   }
+
+  .register {
+    color: white;
+    margin-top: 2rem;
+  }
+
+  .register:hover {
+    cursor: pointer;
+  }
   
   /* Responsive design */
   @media (max-width: 640px) {
